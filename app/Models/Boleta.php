@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
+namespace App\Models;
 
-class Boleta extends Eloquent implements UserInterface, RemindableInterface{
-    use UserTrait, RemindableTrait, SoftDeletingTrait;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Validator;
+
+class Boleta extends Model
+{
+    use SoftDeletes;
     protected $table = 'boleta';
     protected $fillable = ['cargo_postulacion','numero_boleta'];
 
@@ -25,7 +26,7 @@ class Boleta extends Eloquent implements UserInterface, RemindableInterface{
             'cargo_postulacion'                         => 'required|between:1,200',
             'numero_boleta'                             => 'required|integer|min:1|max:10'
         ];
-        
+
         return Validator::make($data, $rules, self::$validation_messages);
     }
 }

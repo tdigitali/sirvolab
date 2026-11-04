@@ -84,7 +84,7 @@
                                                     <img style="margin: auto; filter: {{$convocatoria->convocatoria_estatus_id == 1 ? 'brightness(100%)' : 'brightness(20%)'}};" src="/assets/img/proceso.png" class="ui image">
                                                 </td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 1 ? '<font style="color: #10312B; font-weight: bold;">Configuración de convocatoria</font>' : 'Configuración de convocatoria'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 1 ? '<font style="color: #10312B; font-weight: bold;">Configuración de convocatoria</font>' : 'Configuración de convocatoria'!!}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -95,7 +95,7 @@
                                                     <img style="margin: auto; filter: {{$convocatoria->convocatoria_estatus_id == 2 ? 'brightness(100%)' : 'brightness(20%)'}};" src="/assets/img/validacion.png" class="ui image">
                                                 </td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 2 ? '<font style="color: #10312B; font-weight: bold;">Registro y Validación</font>' : 'Registro y Validación'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 2 ? '<font style="color: #10312B; font-weight: bold;">Registro y Validación</font>' : 'Registro y Validación'!!}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -106,7 +106,7 @@
                                                     <img style="margin: auto; filter: {{$convocatoria->convocatoria_estatus_id == 3 ? 'brightness(100%)' : 'brightness(20%)'}};" src="/assets/img/votacion.png" class="ui image">
                                                 </td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 3 ? '<font style="color: #10312B; font-weight: bold;">Configuración de boleta(s)</font>' : 'Configuración de boleta(s)'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 3 ? '<font style="color: #10312B; font-weight: bold;">Configuración de boleta(s)</font>' : 'Configuración de boleta(s)'!!}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -117,7 +117,7 @@
                                                     <img style="margin: auto; filter: {{$convocatoria->convocatoria_estatus_id == 4 ? 'brightness(100%)' : 'brightness(20%)'}};" src="/assets/img/archivo.png" class="ui image">
                                                 </td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 4 ? '<font style="color: #10312B; font-weight: bold;">Consulta</font>' : 'Consulta'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 4 ? '<font style="color: #10312B; font-weight: bold;">Consulta</font>' : 'Consulta'!!}
                                                 </td>
                                             </tr>
                                             <tr>
@@ -128,7 +128,7 @@
                                                     <img style="margin: auto; filter: {{$convocatoria->convocatoria_estatus_id == 5 ? 'brightness(100%)' : 'brightness(20%)'}};" src="/assets/img/resultados_solo_verde.png" class="ui image">
                                                 </td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 5 ? '<font style="color: #10312B; font-weight: bold;">Resultados y Cierre</font>' : 'Resultados y Cierre'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 5 ? '<font style="color: #10312B; font-weight: bold;">Resultados y Cierre</font>' : 'Resultados y Cierre'!!}
                                                 </td>
                                             </tr>
                                         </table>
@@ -141,7 +141,7 @@
                                                 <span onclick="copiar({{$convocatoria->id}});"><i class="copy circle icon" style="font-size: large; cursor: pointer; color: #235B4E" onmouseover="this.style.color = '#691C32'" onmouseout="this.style.color = '#235B4E'"></i></span>
                                                 <span>Copiar enlace</span>
                                             </center>
-                                            <span id="enlace{{$convocatoria->id}}" style="color: #10312B; font-size: 100%;">{{Ambiente::find(1)->nombre.'registro/'.Crypt::encrypt($convocatoria->id)}}</span>
+                                            <span id="enlace{{$convocatoria->id}}" style="color: #10312B; font-size: 100%;">{{\App\Models\Ambiente::find(1)->nombre.'registro/'.Crypt::encrypt($convocatoria->id)}}</span>
                                             <br/>
                                             <br/>
                                         </div>
@@ -170,7 +170,7 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="/consulta/descargaActaFirmada/{{$convocatoria->id}}/cad/{{str_random(10)}}">
+                                <a href="/consulta/descargaActaFirmada/{{$convocatoria->id}}/cad/{{\Illuminate\Support\Str::random(10)}}">
                                     <p style="font-size: 150%">
                                         <i class="download icon" style="color: #235B4E" onmouseover="this.style.color = '#10312B'" onmouseout="this.style.color = '#235B4E'" title="Descargar Acta"></i>&nbsp;
                                     </p>

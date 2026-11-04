@@ -39,7 +39,7 @@
                 <br/>
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
                     <h1 class="ui header" style="color: #235B4E; font-size: 200%;">
-                        {{Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
+                        {{\App\Models\Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
                     </h1>
                 </div>
             </div>

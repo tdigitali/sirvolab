@@ -152,7 +152,7 @@
         <div style="text-align: left">
             <h3 style="color: #235B4E;">El SIRVOLAB te informa que se ha realizado la validación de tu registro, por lo que el día de la consulta debes ingresar al siguiente enlace:
                 <br/>
-                {{Ambiente::find(1)->nombre}}voto/{{Crypt::encrypt($convocatoriaPadron->id)}}/cad/{{Crypt::encrypt($convocatoriaPadron->cadena_validacion)}}
+                {{\App\Models\Ambiente::find(1)->nombre}}voto/{{Crypt::encrypt($convocatoriaPadron->id)}}/cad/{{Crypt::encrypt($convocatoriaPadron->cadena_validacion)}}
             </h3>
         </div>
         <div style="text-align: left">

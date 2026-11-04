@@ -1,17 +1,18 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
+namespace App\Models;
 
-class Usuario extends Eloquent implements UserInterface, RemindableInterface{
-    use UserTrait, RemindableTrait, SoftDeletingTrait;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\Validator;
+
+class Usuario extends Authenticatable
+{
+    use SoftDeletes;
     protected $table = 'usuario';
-    protected $fillable = ['nombre', 'apellido_paterno', 'apellido_materno', 'rol_id', 'enabled', 'cambio_contrasena', 'password', 'email', 
+    protected $fillable = ['nombre', 'apellido_paterno', 'apellido_materno', 'rol_id', 'enabled', 'cambio_contrasena', 'password', 'email',
         'enabled', 'default_password', 'curp', 'correo_electronico_notificaciones'];
-    protected $hidden = array('password', 'remember_token');
+    protected $hidden = ['password', 'remember_token'];
 
     private static $validation_messages = [
         'nombre.required'                                    => 'El campo de nombre es requerido.',
@@ -43,10 +44,10 @@ class Usuario extends Eloquent implements UserInterface, RemindableInterface{
             'rol_id'                            => 'required|exists:rol,id',
             'email'                             => 'required|between:1,60|email|unique:usuario,email'
         ];
-        
+
         return Validator::make($data, $rules, self::$validation_messages);
     }
-    
+
     public static function validarUsuarioUpdate($data){
         $rules = [
             'nombre'                            => 'required|between:1,50',
@@ -54,10 +55,10 @@ class Usuario extends Eloquent implements UserInterface, RemindableInterface{
             'apellido_materno'                  => 'between:1,50',
             'rol_id'                            => 'required|exists:rol,id',
         ];
-        
+
         return Validator::make($data, $rules, self::$validation_messages);
     }
-    
+
     public static function validarUsuarioCorto($data){
         $rules = [
             'nombre'                            => 'required|between:1,50',
@@ -65,10 +66,10 @@ class Usuario extends Eloquent implements UserInterface, RemindableInterface{
             'apellido_materno'                  => 'between:1,50',
             'email'                             => 'required|between:1,60|email|unique:usuario,email'
         ];
-        
+
         return Validator::make($data, $rules, self::$validation_messages);
     }
-    
+
     public static function validarComite($data){
         $rules = [
             'curp'                              => 'required|between:1,18',
@@ -76,10 +77,10 @@ class Usuario extends Eloquent implements UserInterface, RemindableInterface{
             'email'                             => 'required|between:1,60',
             'correo_electronico_notificaciones' => 'required|between:1,60|email'
         ];
-        
+
         return Validator::make($data, $rules, self::$validation_messages);
     }
-    
+
     public static function validarUsuarioPassword($data){
         $rules = [
             'password'                         => 'required|between:8,16'

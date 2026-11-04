@@ -1,7 +1,7 @@
 @extends('layouts.ly_adminMovil')
 
 @section('content')
-    {{Form::open(array('action' => array('ConvocatoriaController@asignarComiteUpdate',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => array('ConvocatoriaController@asignarComiteUpdate',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -57,7 +57,7 @@
                                                             <br/>
                                                             {{$usuario->email}}&nbsp;&nbsp;
                                                             <br/>
-                                                            {{Rol::find($usuario->rol_id)->nombre}}&nbsp;&nbsp;
+                                                            {{\App\Models\Rol::find($usuario->rol_id)->nombre}}&nbsp;&nbsp;
                                                         </td>
                                                     </tr>
                                                     <tr>
@@ -81,7 +81,7 @@
                                                                 </a>
                                                             </td>
                                                             <td onclick="copiarToken('token' + '{{$usuario->verify_password}}');">
-                                                                {{Form::hidden('token', $usuario->token_autorizacion, ['id' => 'token'.$usuario->verify_password, 'style' => 'color: grey', 'maxlength' => '60'])}}
+                                                                {!!Form::hidden('token', $usuario->token_autorizacion, ['id' => 'token'.$usuario->verify_password, 'style' => 'color: grey', 'maxlength' => '60'])!!}
                                                                 <a href="#" title="Copiar token">
                                                                     <p style="font-size: 150%">
                                                                         <i class="unlock icon" style="color: #235B4E" onmouseover="this.style.color = '#10312B'" onmouseout="this.style.color = '#235B4E'"></i>&nbsp;
@@ -90,7 +90,7 @@
                                                             </td>
                                                         @endif
                                                         <td onclick="copiar('contrasena' + '{{$usuario->verify_password}}');">
-                                                            {{Form::hidden('enlace', Ambiente::find(1)->nombre.'cambiarContrasena/u/'.$usuario->email.'/d/'.$usuario->verify_password, ['id' => 'contrasena'.$usuario->verify_password, 'style' => 'color: grey', 'maxlength' => '60'])}}
+                                                            {!!Form::hidden('enlace', \App\Models\Ambiente::find(1)->nombre.'cambiarContrasena/u/'.$usuario->email.'/d/'.$usuario->verify_password, ['id' => 'contrasena'.$usuario->verify_password, 'style' => 'color: grey', 'maxlength' => '60'])!!}
                                                             <a href="/usuario/enviarEnlaceAcceso/{{$usuario->id}}" title="Copiar enlace de acceso">
                                                                 <p style="font-size: 150%">
                                                                     <i class="linkify icon" style="color: #235B4E" onmouseover="this.style.color = '#10312B'" onmouseout="this.style.color = '#235B4E'"></i>&nbsp;
@@ -128,27 +128,27 @@
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">CURP<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Máximo 18 caracteres</label>
-                                        {{ Form::text('curp', null, ['style' => 'color: grey', 'maxlength' => '200']) }}<br/>
+                                        {!! Form::text('curp', null, ['style' => 'color: grey', 'maxlength' => '200']) !!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Usuario<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Máximo 60 caracteres</label>
-                                        {{ Form::text('email', null, ['style' => 'color: grey', 'maxlength' => '60'])}}<br/>
+                                        {!! Form::text('email', null, ['style' => 'color: grey', 'maxlength' => '60'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Correo Electrónico<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Dirección para notificaciones</label>
-                                        {{ Form::text('correo_electronico_notificaciones', null, ['style' => 'color: grey', 'maxlength' => '60'])}}<br/>
+                                        {!! Form::text('correo_electronico_notificaciones', null, ['style' => 'color: grey', 'maxlength' => '60'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Rol<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Seleccione el rol que desea asignar</label>
                                         <div class="ui fluid selection dropdown search">
-                                            {{ Form::hidden('rol_id', null) }}
+                                            {!! Form::hidden('rol_id', null) !!}
                                             <i style="color: #691C32;" class="list layout icon"></i>
                                             <div class="default text" style="color: #10312B;">Selecciona una opción</div>
                                             <div class="menu">
-                                                @foreach(Rol::where('id', 2)->orWhere('id', 3)->orWhere('id', 4)->get() as $rol)
+                                                @foreach(\App\Models\Rol::where('id', 2)->orWhere('id', 3)->orWhere('id', 4)->get() as $rol)
                                                     <div class="item" style="color: #10312B" data-value="{{$rol->id}}">{{$rol->nombre}}</div>
                                                 @endforeach
                                             </div>
@@ -180,7 +180,7 @@
                 <p style="color: #691C32"><b>* Campos Obligatorios</b></p>
             </center>
         </div>
-    {{Form::close()}}
+    {!!Form::close()!!}
 @endsection
 
 @section('scripts-page')

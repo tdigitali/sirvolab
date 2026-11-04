@@ -64,7 +64,7 @@
                     {{$registroBitacora->fecha_accion}}
                 </td>
                 <td>
-                    {{Usuario::find($registroBitacora->usuario_id)->nombre}}&nbsp;{{Usuario::find($registroBitacora->usuario_id)->apellido_paterno}}
+                    {{\App\Models\Usuario::find($registroBitacora->usuario_id)->nombre}}&nbsp;{{\App\Models\Usuario::find($registroBitacora->usuario_id)->apellido_paterno}}
                 </td>
             </tr>
             @endforeach

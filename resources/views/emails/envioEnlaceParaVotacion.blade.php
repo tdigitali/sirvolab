@@ -150,9 +150,9 @@
             <h3 style="color: #10312B;">Estimado&nbsp;{{$convocatoriaPadron->nombre_completo}},</h3>
         </div>
         <div style="text-align: left">
-            <h3 style="color: #235B4E;">El SIRVOLAB te informa que en el siguiente enlace puedes votar para la convoctoria: {{Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
+            <h3 style="color: #235B4E;">El SIRVOLAB te informa que en el siguiente enlace puedes votar para la convoctoria: {{\App\Models\Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
                 <br/>
-                {{Ambiente::find(1)->nombre}}voto/{{Crypt::encrypt($convocatoriaPadron->id)}}/cad/{{Crypt::encrypt($convocatoriaPadron->cadena_validacion)}}
+                {{\App\Models\Ambiente::find(1)->nombre}}voto/{{Crypt::encrypt($convocatoriaPadron->id)}}/cad/{{Crypt::encrypt($convocatoriaPadron->cadena_validacion)}}
             </h3>
         </div>
         <div style="text-align: left">

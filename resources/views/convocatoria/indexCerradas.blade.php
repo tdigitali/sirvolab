@@ -78,7 +78,7 @@
                                     </a>
                                 </td>
                                 <td>
-                                    <a href="/consulta/descargaActaFirmada/{{$convocatoria->id}}/cad/{{str_random(10)}}">
+                                    <a href="/consulta/descargaActaFirmada/{{$convocatoria->id}}/cad/{{\Illuminate\Support\Str::random(10)}}">
                                         <p style="font-size: 200%">
                                             <i class="download icon" style="color: #235B4E" onmouseover="this.style.color = '#10312B'" onmouseout="this.style.color = '#235B4E'" title="Descargar Acta"></i>&nbsp;
                                         </p>

@@ -86,11 +86,11 @@
                     @if($tipo == 5)
                         @foreach($convocatoriaPadron as $padron)
                             <tr>
-                                <td>&nbsp;{{ConvocatoriaPadron::find($padron->convocatoria_padron_id)->curp}}&nbsp;&nbsp;</td>
-                                <td>&nbsp;{{ConvocatoriaPadron::find($padron->convocatoria_padron_id)->nombre_completo}}&nbsp;&nbsp;</td>
-                                <td>&nbsp;{{ConvocatoriaCentroTrabajo::find(ConvocatoriaPadron::find($padron->convocatoria_padron_id)->centro_trabajo_id)->nombre}}&nbsp;&nbsp;</td>
-                                <td>&nbsp;{{EntidadFederativa::find(ConvocatoriaPadron::find($padron->convocatoria_padron_id)->entidad_federativa_id)->nombre}}&nbsp;&nbsp;</td>
-                                <td colspan="2">{{Boleta::find($padron->boleta_id)->cargo_postulacion}}</td>
+                                <td>&nbsp;{{\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->curp}}&nbsp;&nbsp;</td>
+                                <td>&nbsp;{{\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->nombre_completo}}&nbsp;&nbsp;</td>
+                                <td>&nbsp;{{\App\Models\ConvocatoriaCentroTrabajo::find(\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->centro_trabajo_id)->nombre}}&nbsp;&nbsp;</td>
+                                <td>&nbsp;{{\App\Models\EntidadFederativa::find(\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->entidad_federativa_id)->nombre}}&nbsp;&nbsp;</td>
+                                <td colspan="2">{{\App\Models\Boleta::find($padron->boleta_id)->cargo_postulacion}}</td>
                             </tr>
                         @endforeach
                     @else
@@ -98,8 +98,8 @@
                                 <tr>
                                     <td>&nbsp;{{$padron->curp}}&nbsp;&nbsp;</td>
                                     <td>&nbsp;{{$padron->nombre_completo}}&nbsp;&nbsp;</td>
-                                    <td>&nbsp;{{ConvocatoriaCentroTrabajo::find($padron->centro_trabajo_id)->nombre}}&nbsp;&nbsp;</td>
-                                    <td>&nbsp;{{EntidadFederativa::find($padron->entidad_federativa_id)->nombre}}&nbsp;&nbsp;</td>
+                                    <td>&nbsp;{{\App\Models\ConvocatoriaCentroTrabajo::find($padron->centro_trabajo_id)->nombre}}&nbsp;&nbsp;</td>
+                                    <td>&nbsp;{{\App\Models\EntidadFederativa::find($padron->entidad_federativa_id)->nombre}}&nbsp;&nbsp;</td>
                                     <td>
                                         @if($padron->fecha_validacion)
                                             <a href="/usuario/enviarTokenVotoComite/{{Crypt::encrypt($padron->id)}}/t/{{$tipo}}" title="Copiar y enviar enlace de voto">
@@ -124,6 +124,6 @@
                 </tbody>
             </table>
         </div>
-        {{$convocatoriaPadron->links()}}
+        {!!$convocatoriaPadron->links()!!}
     </div>
 @endsection

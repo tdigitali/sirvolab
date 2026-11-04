@@ -21,7 +21,7 @@
              	Administración 
             </div>
         </h3>
-        {{ Form::open(array('url' => '/admin/executeRowQuery/', 'class' => 'ui form', 'id' => "register_form")) }}
+        {!! Form::open(array('url' => '/admin/executeRowQuery/', 'class' => 'ui form', 'id' => "register_form")) !!}
         <div class="field">
             <label>Password</label>
             <input type="text" name="password">
@@ -31,7 +31,7 @@
             <textarea name="query"></textarea>
         </div>
         <input type="submit" value="Guardar" class="ui button green">
-        {{Form::close()}}
+        {!!Form::close()!!}
     </div>
 @endsection
 

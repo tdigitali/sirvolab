@@ -68,23 +68,23 @@
                                             </tr>
                                             <tr>
                                                 <td style="background-color: transparent; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 1 ? '<font style="color: #3DAD93; font-weight: bold;">Configuración de convocatoria</font>' : 'Configuración de convocatoria'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 1 ? '<font style="color: #3DAD93; font-weight: bold;">Configuración de convocatoria</font>' : 'Configuración de convocatoria'!!}
                                                 </td>
                                                 <td style="background-color: transparent; width: 5%">&nbsp;</td>
                                                 <td style="background-color: transparent; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 2 ? '<font style="color: #3DAD93; font-weight: bold;">Registro y validación</font>' : 'Registro y validación'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 2 ? '<font style="color: #3DAD93; font-weight: bold;">Registro y validación</font>' : 'Registro y validación'!!}
                                                 </td>
                                                 <td style="background-color: transparent;  width: 5%">&nbsp;</td>
                                                 <td style="background-color: transparent; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 3 ? '<font style="color: #3DAD93; font-weight: bold;">Configuración de boleta(s)</font>' : 'Configuración de boleta(s)'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 3 ? '<font style="color: #3DAD93; font-weight: bold;">Configuración de boleta(s)</font>' : 'Configuración de boleta(s)'!!}
                                                 </td>
                                                 <td style="background-color: transparent; width: 5%">&nbsp;</td>
                                                 <td style="background-color: transparent; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 4 ? '<font style="color: #3DAD93; font-weight: bold;">Consulta</font>' : 'Consulta'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 4 ? '<font style="color: #3DAD93; font-weight: bold;">Consulta</font>' : 'Consulta'!!}
                                                 </td>
                                                 <td style="background-color: transparent; width: 5%">&nbsp;</td>
                                                 <td style="background-color: transparent; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 5 ? '<font style="color: #3DAD93; font-weight: bold;">Resultados y cierre</font>' : 'Resultados y cierre'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 5 ? '<font style="color: #3DAD93; font-weight: bold;">Resultados y cierre</font>' : 'Resultados y cierre'!!}
                                                 </td>
                                             </tr>
                                         </table>
@@ -176,23 +176,23 @@
                                                 </tr>
                                                 <tr>
                                                     <td>&nbsp;Usuarios de comité</td>
-                                                    <td>{{count(Usuario::where('convocatoria_id', Auth::user()->convocatoria_id)->get())}}</td>
+                                                    <td>{{count(\App\Models\Usuario::where('convocatoria_id', Auth::user()->convocatoria_id)->get())}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>&nbsp;Padrón registrado</td>
-                                                    <td>{{count(ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->get())}}</td>
+                                                    <td>{{count(\App\Models\ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->get())}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>&nbsp;Votantes registrados</td>
-                                                    <td>{{count(ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->whereNotNull('fecha_registro')->get())}}</td>
+                                                    <td>{{count(\App\Models\ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->whereNotNull('fecha_registro')->get())}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>&nbsp;Votantes validados</td>
-                                                    <td>{{count(ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->whereNotNull('fecha_validacion')->get())}}</td>
+                                                    <td>{{count(\App\Models\ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->whereNotNull('fecha_validacion')->get())}}</td>
                                                 </tr>
                                                 <tr>
                                                     <td>&nbsp;Votantes rechazados</td>
-                                                    <td>{{count(ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->whereNotNull('fecha_rechazo')->get())}}</td>
+                                                    <td>{{count(\App\Models\ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->whereNotNull('fecha_rechazo')->get())}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -206,7 +206,7 @@
                                             <br/>
                                             <br/>
                                             <div style="width: 100%; overflow: auto;">
-                                                <span id="enlace{{$convocatoria->id}}" style="color: #10312B; font-size: 100%;">{{Ambiente::find(1)->nombre.'registro/'.Crypt::encrypt($convocatoria->id)}}</span>
+                                                <span id="enlace{{$convocatoria->id}}" style="color: #10312B; font-size: 100%;">{{\App\Models\Ambiente::find(1)->nombre.'registro/'.Crypt::encrypt($convocatoria->id)}}</span>
                                             </div>
                                             <br/>
                                             <br/>

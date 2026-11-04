@@ -77,7 +77,7 @@
                         <tr>
                             <td>&nbsp;{{$convocatoria->nombre}}&nbsp;&nbsp;</td>
                             <td>&nbsp;{{$convocatoria->nombre_sindicato}}&nbsp;&nbsp;</td>
-                            <td>&nbsp;{{ConvocatoriaEstatus::find($convocatoria->convocatoria_estatus_id)->nombre}}&nbsp;&nbsp;</td>
+                            <td>&nbsp;{{\App\Models\ConvocatoriaEstatus::find($convocatoria->convocatoria_estatus_id)->nombre}}&nbsp;&nbsp;</td>
                             <td>
                                 <a href="/convocatoria/edit/{{$convocatoria->id}}" title="Editar">
                                     <p style="font-size: 200%">
@@ -126,23 +126,23 @@
                                             </tr>
                                             <tr>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 1 ? '<font style="color: #10312B; font-weight: bold;">Configuración de convocatoria</font>' : 'Configuración de convocatoria'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 1 ? '<font style="color: #10312B; font-weight: bold;">Configuración de convocatoria</font>' : 'Configuración de convocatoria'!!}
                                                 </td>
                                                 <td style="background-color: white; width: 5%">&nbsp;</td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 2 ? '<font style="color: #10312B; font-weight: bold;">Registro y Validación</font>' : 'Registro y Validación'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 2 ? '<font style="color: #10312B; font-weight: bold;">Registro y Validación</font>' : 'Registro y Validación'!!}
                                                 </td>
                                                 <td style="background-color: white;  width: 5%">&nbsp;</td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 3 ? '<font style="color: #10312B; font-weight: bold;">Configuración de boleta(s)</font>' : 'Configuración de boleta(s)'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 3 ? '<font style="color: #10312B; font-weight: bold;">Configuración de boleta(s)</font>' : 'Configuración de boleta(s)'!!}
                                                 </td>
                                                 <td style="background-color: white; width: 5%">&nbsp;</td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 4 ? '<font style="color: #10312B; font-weight: bold;">Consulta</font>' : 'Consulta'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 4 ? '<font style="color: #10312B; font-weight: bold;">Consulta</font>' : 'Consulta'!!}
                                                 </td>
                                                 <td style="background-color: white; width: 5%">&nbsp;</td>
                                                 <td style="background-color: white; width: 15%">
-                                                    <br/>{{$convocatoria->convocatoria_estatus_id == 5 ? '<font style="color: #10312B; font-weight: bold;">Resultados y Cierre</font>' : 'Resultados y Cierre'}}
+                                                    <br/>{!!$convocatoria->convocatoria_estatus_id == 5 ? '<font style="color: #10312B; font-weight: bold;">Resultados y Cierre</font>' : 'Resultados y Cierre'!!}
                                                 </td>
                                                 <td style="background-color: white; width: 5%">&nbsp;</td>
                                             </tr>
@@ -156,7 +156,7 @@
                                                 <span onclick="copiar({{$convocatoria->id}});"><i class="copy circle icon" style="font-size: large; cursor: pointer; color: #235B4E" onmouseover="this.style.color = '#691C32'" onmouseout="this.style.color = '#235B4E'"></i></span>
                                                 <span>Copiar enlace</span>
                                             </center>
-                                            <span id="enlace{{$convocatoria->id}}" style="color: #10312B; font-size: 100%;">{{Ambiente::find(1)->nombre.'registro/'.Crypt::encrypt($convocatoria->id)}}</span>
+                                            <span id="enlace{{$convocatoria->id}}" style="color: #10312B; font-size: 100%;">{{\App\Models\Ambiente::find(1)->nombre.'registro/'.Crypt::encrypt($convocatoria->id)}}</span>
                                             <br/>
                                             <br/>
                                         </div>
@@ -185,7 +185,7 @@
                                 </a>
                             </td>
                             <td>
-                                <a href="/consulta/descargaActaFirmada/{{$convocatoria->id}}/cad/{{str_random(10)}}">
+                                <a href="/consulta/descargaActaFirmada/{{$convocatoria->id}}/cad/{{\Illuminate\Support\Str::random(10)}}">
                                     <p style="font-size: 200%">
                                         <i class="download icon" style="color: #235B4E" onmouseover="this.style.color = '#10312B'" onmouseout="this.style.color = '#235B4E'" title="Descargar Acta"></i>&nbsp;
                                     </p>

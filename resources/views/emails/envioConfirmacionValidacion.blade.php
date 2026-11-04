@@ -161,10 +161,10 @@
                     <br/>
                     <br/>                    
                     <center>
-                        Incia el <b style="color: #3DAD93; font-size: 150%">({{Convocatoria::find($convocatoriaPadron->convocatoria_id)->fecha_consulta_inicio}})</b> y
+                        Incia el <b style="color: #3DAD93; font-size: 150%">({{\App\Models\Convocatoria::find($convocatoriaPadron->convocatoria_id)->fecha_consulta_inicio}})</b> y
                         <br/>
                         <br/>
-                        Termina el <b style="color: #3DAD93; font-size: 150%">({{Convocatoria::find($convocatoriaPadron->convocatoria_id)->fecha_consulta_fin}})</b>
+                        Termina el <b style="color: #3DAD93; font-size: 150%">({{\App\Models\Convocatoria::find($convocatoriaPadron->convocatoria_id)->fecha_consulta_fin}})</b>
                         <br/>
                         <br/>
                     </center>
@@ -176,11 +176,11 @@
                         <br/>
                     </h2>
                     <h3 style="color: #10312B; text-align: center;  width: 70%;">
-                        {{Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
+                        {{\App\Models\Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
                     </h3>
                     <div style="background-color: #3DAD93; width: 70%; border-radius: 15px 15px 15px 15px;">
                         <p style="color: red; font-size: 180%">
-                            <a href="{{Ambiente::find(1)->nombre}}voto/{{Crypt::encrypt($convocatoriaPadron->id)}}/cad/{{Crypt::encrypt($convocatoriaPadron->cadena_validacion)}}" style="color: white; text-decoration: none;">
+                            <a href="{{\App\Models\Ambiente::find(1)->nombre}}voto/{{Crypt::encrypt($convocatoriaPadron->id)}}/cad/{{Crypt::encrypt($convocatoriaPadron->cadena_validacion)}}" style="color: white; text-decoration: none;">
                                 Haz clic aquí para votar
                             </a>
                         </p>

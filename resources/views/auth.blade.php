@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class="six wide column">
-                        {{Form::open(['url' => '/login/', 'class' => 'ui large form', 'id' => "auth-form"])}}
+                        {!!Form::open(['url' => '/login/', 'class' => 'ui large form', 'id' => "auth-form"])!!}
                             <br/><br/>
                             <center>
                                 @if(Session::get("message") != null)
@@ -80,11 +80,11 @@
                                 </a>
                             </div>
 							<div class="ui stacked segment" style="background-color: transparent;">
-                                <a href="/aviso/{{str_random(10)}}">
+                                <a href="/aviso/{{\Illuminate\Support\Str::random(10)}}">
                                     <div style="background-color: #1E5B4F" class="ui fluid large youtube submit button">Descargar Aviso de Privacidad</div>
                                 </a>
                             </div>
-                        {{Form::close()}}
+                        {!!Form::close()!!}
                     </div>
                     <div class="one wide column" style="margin: auto;">
                         <div style="text-align: center; width: 100%; margin: 0 auto;">

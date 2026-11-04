@@ -34,7 +34,7 @@
                                                 <th colspan="2">&nbsp;&nbsp;Acciones&nbsp;&nbsp;</th>
                                             </thead>
                                             <tbody>
-                                                @foreach(Convocatoria::where('convocatoria_estatus_id', '!=', 6)->get() as $convocatoria)
+                                                @foreach(\App\Models\Convocatoria::where('convocatoria_estatus_id', '!=', 6)->get() as $convocatoria)
                                                     <tr>
                                                         <td>&nbsp;{{$convocatoria->nombre}}&nbsp;&nbsp;</td>
                                                         <td>

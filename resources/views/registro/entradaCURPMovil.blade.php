@@ -1,7 +1,7 @@
 @extends('layouts.ly_registro')
 
 @section('content')
-    {{Form::open(array('action' => array('RegistroValidacionController@validaCURP', Crypt::encrypt($convocatoria->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => array('RegistroValidacionController@validaCURP', Crypt::encrypt($convocatoria->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent; border: none;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -39,7 +39,7 @@
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">CURP<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Ingrese su CURP para el registro a la convocatoria</label>
-                                        {{ Form::text('curp', null, ['style' => 'color: grey', 'maxlength' => '100']) }}<br/>
+                                        {!! Form::text('curp', null, ['style' => 'color: grey', 'maxlength' => '100']) !!}<br/>
                                     </div>
                                 </div>
                                 <hr style="border:1px solid #10312B; width: 80%;"/>
@@ -66,7 +66,7 @@
                 </div>
             </div>
         </div>
-    {{ Form::close() }}   
+    {!! Form::close() !!}   
 @endsection
 
 @section('scripts-page')

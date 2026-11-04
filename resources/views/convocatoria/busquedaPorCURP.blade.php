@@ -1,7 +1,7 @@
 @extends('layouts.ly_admin')
 
 @section('content')
-    {{Form::open(array('action' => 'ConvocatoriaController@busquedaPorCURPConsulta' ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => 'ConvocatoriaController@busquedaPorCURPConsulta' ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent; text-align: center;">
             <div class="ui grid">
                 <div class="one wide column">
@@ -54,7 +54,7 @@
                                                     <div class="field">
                                                         <label style="color: #1E5B4F; font-size: large">CURP<span style="color: #691C32;">*</span></label>
                                                         <label style="color: #1E5B4F; font-size: small">Máximo 18 caracteres</label>
-                                                        {{Form::text('curp', $curp, ['style' => 'color: grey', 'maxlength' => '18'])}}<br/>
+                                                        {!!Form::text('curp', $curp, ['style' => 'color: grey', 'maxlength' => '18'])!!}<br/>
                                                     </div>
                                                 </td>
                                                 <td style="background-color: transparent;">
@@ -82,7 +82,7 @@
                 </div>
             </div>
         </div>
-    {{Form::close()}}
+    {!!Form::close()!!}
 @endsection
 
 @section('scripts-page')

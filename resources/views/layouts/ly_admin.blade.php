@@ -42,7 +42,7 @@
         <div id="main-section" class="ui padded grid" style="border: none;">
             <div class="column">
                 <p class="ui header" style="color: #10312B; text-align: right;">
-                    <i style="color: #10312B;" class="tag icon"></i>{{Rol::find(Auth::user()->rol_id)->nombre}}
+                    <i style="color: #10312B;" class="tag icon"></i>{{\App\Models\Rol::find(Auth::user()->rol_id)->nombre}}
                 </p>
                 @yield('content')
             </div>

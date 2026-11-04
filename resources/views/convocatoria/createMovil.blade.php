@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    {{Form::open(array('action' => 'ConvocatoriaController@store' ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => 'ConvocatoriaController@store' ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -43,25 +43,25 @@
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Nombre del sindicato<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Máximo 200 caracteres</label>
-                                        {{ Form::text('nombre_sindicato', null, ['style' => 'color: grey', 'maxlength' => '200']) }}<br/>
+                                        {!! Form::text('nombre_sindicato', null, ['style' => 'color: grey', 'maxlength' => '200']) !!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Nombre de la convocatoria<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Máximo 300 caracteres</label>
-                                        {{ Form::text('nombre', null, ['style' => 'color: grey', 'maxlength' => '300']) }}<br/>
+                                        {!! Form::text('nombre', null, ['style' => 'color: grey', 'maxlength' => '300']) !!}<br/>
                                     </div>
                                 </div>
                                 <div class="two fields">
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Número mínimo de usuarios que realizarán autorizaciones<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Ingrese sólo números</label>
-                                        {{Form::number('numero_autorizadores_minimo', null, ['style' => 'color: grey', 'max' => '10', 'min' => '1'])}}<br/>
+                                        {!!Form::number('numero_autorizadores_minimo', null, ['style' => 'color: grey', 'max' => '10', 'min' => '1'])!!}<br/>
                                     </div>
                                     <div class="field">
-                                        <label style="color: #10312B; font-size: large">¿ Es aprobación o revisión de contrato ? {{Form::checkbox('aprobacion_confirmacion_contrato', null, null,['class' => 'ui checkbox'])}}</label>
+                                        <label style="color: #10312B; font-size: large">¿ Es aprobación o revisión de contrato ? {!!Form::checkbox('aprobacion_confirmacion_contrato', null, null,['class' => 'ui checkbox'])!!}</label>
                                         <label style="color: #10312B; font-size: small">Marque la casilla para confirmar la pregunta</label>
                                         <br/>
-                                        <label style="color: #10312B; font-size: large">¿ Se seleccionarán 2 participantes ? {{Form::checkbox('seleccionar_dos_cargos', null, null,['class' => 'ui checkbox'])}}</label>
+                                        <label style="color: #10312B; font-size: large">¿ Se seleccionarán 2 participantes ? {!!Form::checkbox('seleccionar_dos_cargos', null, null,['class' => 'ui checkbox'])!!}</label>
                                         <label style="color: #10312B; font-size: small">Marque la casilla para confirmar la pregunta</label>
                                     </div>
                                 </div>
@@ -77,7 +77,7 @@
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Fecha de inicio de registro y validación<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Seleccione la fecha</label>
-                                        {{Form::text('fecha_registro_validacion_inicio', null, ['id' => 'fecha_registro_validacion_inicio', 'class' => 'datepicker-post', 'style' => 'color: grey'])}}<br/>
+                                        {!!Form::text('fecha_registro_validacion_inicio', null, ['id' => 'fecha_registro_validacion_inicio', 'class' => 'datepicker-post', 'style' => 'color: grey'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Determina la hora en que iniciará el registro y validación<span style="color: #691C32;">*</span></label>
@@ -85,13 +85,13 @@
                                         <table>
                                             <tr>
                                                 <td style="background-color: transparent;">
-                                                    {{Form::select('fecha_registro_validacion_inicio_hora', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
+                                                    {!!Form::select('fecha_registro_validacion_inicio_hora', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
                                                     , '06' => '06', '07' => '07', '08' => '08', '09' => '09', '10' => '10', '11' => '11'
                                                             , '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17'
-                                                                    , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'), '00');}}
+                                                                    , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'), '00');!!}
                                                 </td>
                                                 <td style="background-color: transparent;">
-                                                    {{Form::select('fecha_registro_validacion_inicio_minu', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
+                                                    {!!Form::select('fecha_registro_validacion_inicio_minu', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
                                                     , '06' => '06', '07' => '07', '08' => '08', '09' => '09', '10' => '10', '11' => '11'
                                                             , '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17'
                                                                     , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'
@@ -100,7 +100,7 @@
                                                                                             , '36' => '36', '37' => '37', '38' => '38', '39' => '39', '40' => '40', '41' => '41'
                                                                                                     , '42' => '42', '43' => '43', '44' => '44', '45' => '45', '46' => '46', '47' => '47'
                                                                                                             , '48' => '48', '49' => '49', '50' => '50', '51' => '51', '52' => '52', '53' => '53'
-                                                                                                                    , '54' => '54', '55' => '55', '56' => '56', '57' => '57', '58' => '58', '59' => '59'),'00');}}
+                                                                                                                    , '54' => '54', '55' => '55', '56' => '56', '57' => '57', '58' => '58', '59' => '59'),'00');!!}
                                                 </td>
                                             </tr>
                                         </table>
@@ -110,7 +110,7 @@
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Fecha de fin de registro y validación<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Seleccione la fecha</label>
-                                        {{Form::text('fecha_registro_validacion_fin', null, ['id' => 'fecha_registro_validacion_fin', 'class' => 'datepicker-post', 'style' => 'color: grey'])}}<br/>
+                                        {!!Form::text('fecha_registro_validacion_fin', null, ['id' => 'fecha_registro_validacion_fin', 'class' => 'datepicker-post', 'style' => 'color: grey'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Determina la hora en que terminará el registro y validación<span style="color: #691C32;">*</span></label>
@@ -118,13 +118,13 @@
                                         <table>
                                             <tr>
                                                 <td style="background-color: transparent;">
-                                                    {{Form::select('fecha_registro_validacion_fin_hora', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
+                                                    {!!Form::select('fecha_registro_validacion_fin_hora', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
                                                     , '06' => '06', '07' => '07', '08' => '08', '09' => '09', '10' => '10', '11' => '11'
                                                             , '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17'
-                                                                    , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'), '00');}}
+                                                                    , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'), '00');!!}
                                                 </td>
                                                 <td style="background-color: transparent;">
-                                                    {{Form::select('fecha_registro_validacion_fin_minu', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
+                                                    {!!Form::select('fecha_registro_validacion_fin_minu', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
                                                     , '06' => '06', '07' => '07', '08' => '08', '09' => '09', '10' => '10', '11' => '11'
                                                             , '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17'
                                                                     , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'
@@ -133,7 +133,7 @@
                                                                                             , '36' => '36', '37' => '37', '38' => '38', '39' => '39', '40' => '40', '41' => '41'
                                                                                                     , '42' => '42', '43' => '43', '44' => '44', '45' => '45', '46' => '46', '47' => '47'
                                                                                                             , '48' => '48', '49' => '49', '50' => '50', '51' => '51', '52' => '52', '53' => '53'
-                                                                                                                    , '54' => '54', '55' => '55', '56' => '56', '57' => '57', '58' => '58', '59' => '59'),'00');}}
+                                                                                                                    , '54' => '54', '55' => '55', '56' => '56', '57' => '57', '58' => '58', '59' => '59'),'00');!!}
                                                 </td>
                                             </tr>
                                         </table>
@@ -143,7 +143,7 @@
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Fecha de inicio de la consulta<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Seleccione la fecha</label>
-                                        {{Form::text('fecha_consulta_inicio', null, ['id' => 'fecha_consulta_inicio', 'class' => 'datepicker-post', 'style' => 'color: grey'])}}<br/>
+                                        {!!Form::text('fecha_consulta_inicio', null, ['id' => 'fecha_consulta_inicio', 'class' => 'datepicker-post', 'style' => 'color: grey'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Determina la hora en que iniciará la consulta<span style="color: #691C32;">*</span></label>
@@ -151,13 +151,13 @@
                                         <table>
                                             <tr>
                                                 <td style="background-color: transparent;">
-                                                    {{Form::select('fecha_consulta_inicio_hora', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
+                                                    {!!Form::select('fecha_consulta_inicio_hora', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
                                                     , '06' => '06', '07' => '07', '08' => '08', '09' => '09', '10' => '10', '11' => '11'
                                                             , '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17'
-                                                                    , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'), '00');}}
+                                                                    , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'), '00');!!}
                                                 </td>
                                                 <td style="background-color: transparent;">
-                                                    {{Form::select('fecha_consulta_inicio_minu', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
+                                                    {!!Form::select('fecha_consulta_inicio_minu', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
                                                     , '06' => '06', '07' => '07', '08' => '08', '09' => '09', '10' => '10', '11' => '11'
                                                             , '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17'
                                                                     , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'
@@ -166,7 +166,7 @@
                                                                                             , '36' => '36', '37' => '37', '38' => '38', '39' => '39', '40' => '40', '41' => '41'
                                                                                                     , '42' => '42', '43' => '43', '44' => '44', '45' => '45', '46' => '46', '47' => '47'
                                                                                                             , '48' => '48', '49' => '49', '50' => '50', '51' => '51', '52' => '52', '53' => '53'
-                                                                                                                    , '54' => '54', '55' => '55', '56' => '56', '57' => '57', '58' => '58', '59' => '59'),'00');}}
+                                                                                                                    , '54' => '54', '55' => '55', '56' => '56', '57' => '57', '58' => '58', '59' => '59'),'00');!!}
                                                 </td>
                                             </tr>
                                         </table>
@@ -176,7 +176,7 @@
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Fecha de fin de la consulta<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Seleccione la fecha</label>
-                                        {{Form::text('fecha_consulta_fin', null, ['id' => 'fecha_consulta_fin', 'class' => 'datepicker-post', 'style' => 'color: grey'])}}<br/>
+                                        {!!Form::text('fecha_consulta_fin', null, ['id' => 'fecha_consulta_fin', 'class' => 'datepicker-post', 'style' => 'color: grey'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: medium">Determina la hora en que terminará la consulta<span style="color: #691C32;">*</span></label>
@@ -184,13 +184,13 @@
                                         <table>
                                             <tr>
                                                 <td style="background-color: transparent;">
-                                                    {{Form::select('fecha_consulta_fin_hora', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
+                                                    {!!Form::select('fecha_consulta_fin_hora', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
                                                     , '06' => '06', '07' => '07', '08' => '08', '09' => '09', '10' => '10', '11' => '11'
                                                             , '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17'
-                                                                    , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'), '00');}}
+                                                                    , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'), '00');!!}
                                                 </td>
                                                 <td style="background-color: transparent;">
-                                                    {{Form::select('fecha_consulta_fin_minu', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
+                                                    {!!Form::select('fecha_consulta_fin_minu', array('00' => '00', '01' => '01', '02' => '02', '03' => '03', '04' => '04', '05' => '05'
                                                     , '06' => '06', '07' => '07', '08' => '08', '09' => '09', '10' => '10', '11' => '11'
                                                             , '12' => '12', '13' => '13', '14' => '14', '15' => '15', '16' => '16', '17' => '17'
                                                                     , '18' => '18', '19' => '19', '20' => '20', '21' => '21', '22' => '22', '23' => '23'
@@ -199,7 +199,7 @@
                                                                                             , '36' => '36', '37' => '37', '38' => '38', '39' => '39', '40' => '40', '41' => '41'
                                                                                                     , '42' => '42', '43' => '43', '44' => '44', '45' => '45', '46' => '46', '47' => '47'
                                                                                                             , '48' => '48', '49' => '49', '50' => '50', '51' => '51', '52' => '52', '53' => '53'
-                                                                                                                    , '54' => '54', '55' => '55', '56' => '56', '57' => '57', '58' => '58', '59' => '59'),'00');}}
+                                                                                                                    , '54' => '54', '55' => '55', '56' => '56', '57' => '57', '58' => '58', '59' => '59'),'00');!!}
                                                 </td>
                                             </tr>
                                         </table>
@@ -229,7 +229,7 @@
                 </div>
             </div>
         </div>
-    {{ Form::close() }}   
+    {!! Form::close() !!}   
 @endsection
 
 @section('scripts-page')

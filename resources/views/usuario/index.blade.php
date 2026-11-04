@@ -76,7 +76,7 @@
                     @foreach($usuarios as $usuario)
                         <tr>
                             <td>&nbsp;{{$usuario->nombre}}&nbsp;{{$usuario->apellido_paterno}}&nbsp;{{$usuario->apellido_materno}}&nbsp;&nbsp;</td>
-                            <td>&nbsp;{{Rol::find($usuario->rol_id)->nombre}}&nbsp;&nbsp;</td>
+                            <td>&nbsp;{{\App\Models\Rol::find($usuario->rol_id)->nombre}}&nbsp;&nbsp;</td>
                             @if($usuario->enabled == true)
                                 <td>Si&nbsp;&nbsp;</td>
                             @else($usuario->enabled == false)

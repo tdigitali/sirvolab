@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
+namespace App\Models;
 
-class ConvocatoriaPadron extends Eloquent implements UserInterface, RemindableInterface
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Validator;
+
+class ConvocatoriaPadron extends Model
 {
-    use UserTrait, RemindableTrait, SoftDeletingTrait;
+    use SoftDeletes;
     protected $table = 'convocatoria_padron';
     protected $fillable = ['curp','nombre_completo','centro_trabajo_id','entidad_federativa_id','convocatoria_id',
                             'fecha_carga','fecha_registro','voto_emitido'];
@@ -31,7 +31,7 @@ class ConvocatoriaPadron extends Eloquent implements UserInterface, RemindableIn
         $rules = [
             'correo_electronico'                             => 'required|between:1,100|email'
         ];
-        
+
         return Validator::make($data, $rules, self::$validation_messages);
     }
 }

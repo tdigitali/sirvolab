@@ -92,8 +92,8 @@
                 <center>
                     <div id="div{{$contador}}" style="display: none;">
                         <table width="100%">
-                            @foreach(BoletaCandidato::where('boleta_id', $boleta->id)->get() as $boletaCandidato)
-                                @if(count(Conteo::where('boleta_candidato_id', $boletaCandidato->id)->get()) < $resultadoFin[$contadorVotos])
+                            @foreach(\App\Models\BoletaCandidato::where('boleta_id', $boleta->id)->get() as $boletaCandidato)
+                                @if(count(\App\Models\Conteo::where('boleta_candidato_id', $boletaCandidato->id)->get()) < $resultadoFin[$contadorVotos])
                                     <tr>
                                         <td width="10%" style="background-color: transparent;">
                                             &nbsp;
@@ -107,7 +107,7 @@
                                             &nbsp;&nbsp;{{$boletaCandidato->nombre_completo}}&nbsp;&nbsp;
                                         </td>
                                         <td style="background-color: transparent; font-size: 300%; color: #10312B">
-                                            &nbsp;&nbsp;{{count(Conteo::where('boleta_candidato_id', $boletaCandidato->id)->get())}}
+                                            &nbsp;&nbsp;{{count(\App\Models\Conteo::where('boleta_candidato_id', $boletaCandidato->id)->get())}}
                                         </td>
                                         <td width="10%" style="background-color: transparent;">
                                             &nbsp;
@@ -134,7 +134,7 @@
                                             &nbsp;&nbsp;{{$boletaCandidato->nombre_completo}}&nbsp;&nbsp;
                                         </td>
                                         <td style="background-color: #10312B; font-size: 300%; color: white">
-                                            &nbsp;&nbsp;{{count(Conteo::where('boleta_candidato_id', $boletaCandidato->id)->get())}}
+                                            &nbsp;&nbsp;{{count(\App\Models\Conteo::where('boleta_candidato_id', $boletaCandidato->id)->get())}}
                                         </td>
                                         <td width="10%" style="background-color: transparent;">
                                             &nbsp;
@@ -153,7 +153,7 @@
                         </table>
                     </div>
                     <div style="background-color: transparent; font-size: 200%; color: #10312B">
-                        Votos Nulos: {{count(Conteo::where('boleta_candidato_id', null)->where('boleta_id', $boleta->id)->get())}} 
+                        Votos Nulos: {{count(\App\Models\Conteo::where('boleta_candidato_id', null)->where('boleta_id', $boleta->id)->get())}} 
                     </div>
                 </center>
                 <br/>
@@ -190,7 +190,7 @@
                 </div>
             @endforeach
             <br/>
-            {{Form::open(array('action' => 'VotacionController@cargaActa' ,'class' => 'ui form', 'id' => "register_form", 'enctype' => "multipart/form-data"))}}
+            {!!Form::open(array('action' => 'VotacionController@cargaActa' ,'class' => 'ui form', 'id' => "register_form", 'enctype' => "multipart/form-data"))!!}
                 <div>
                     <h1 class="ui header" style="color: #10312B; font-size: 200%;">
                         - Cargar acta(s) firmada(s) de la consulta -
@@ -242,7 +242,7 @@
                         </div>
                     </center>
                 </div>
-            {{Form::close()}}
+            {!!Form::close()!!}
         </div>
     </div>
 @endsection

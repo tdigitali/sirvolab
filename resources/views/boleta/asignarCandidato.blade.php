@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    {{Form::open(array('action' => array('BoletaController@asignarCandidatoUpdate',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => array('BoletaController@asignarCandidatoUpdate',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -123,12 +123,12 @@
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">CURP<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Máximo 18 caracteres</label>
-                                        {{Form::text('curp', null, ['style' => 'color: grey', 'maxlength' => '18'])}}<br/>
+                                        {!!Form::text('curp', null, ['style' => 'color: grey', 'maxlength' => '18'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Nombre Completo<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Máximo 200 caracteres</label>
-                                        {{Form::text('nombre_completo', null, ['style' => 'color: grey', 'maxlength' => '200'])}}<br/>
+                                        {!!Form::text('nombre_completo', null, ['style' => 'color: grey', 'maxlength' => '200'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Color de Planilla<span style="color: #691C32;">*</span></label>
@@ -161,7 +161,7 @@
                 </div>
             </div>
         </div>
-    {{Form::close()}}
+    {!!Form::close()!!}
 @endsection
 
 @section('scripts-page')

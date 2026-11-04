@@ -1,22 +1,28 @@
 <?php
 
+namespace App\Http\Controllers;
+
+use App\Models\Bitacora;
+use App\Models\Convocatoria;
+use App\Models\ConvocatoriaPadron;
+use App\Models\Usuario;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
-class UsuarioController extends BaseController {
+class UsuarioController extends BaseController
+{
     public function index(){
+        $detector = $this->detectarMovil();
+
         if(Auth::user()->rol_id == 1){
-            $miuseragent=$_SERVER['HTTP_USER_AGENT'];
-            $moviles=array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-            $detector=0;
-            $numMoviles=count($moviles);
-
-            for($i=0;$i<$numMoviles;$i++){
-                $comprobar=strpos($miuseragent,$moviles[$i]);
-                if($comprobar!=""){
-                    $detector=1;
-                }
-            }
-
             if($detector==1){
                 $usuarios = Usuario::where('rol_id', 1)->get();
                 return View::make("usuario.indexMovil", compact("usuarios"));
@@ -27,21 +33,11 @@ class UsuarioController extends BaseController {
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function create(){
+        $detector = $this->detectarMovil();
+
         if(Auth::user()->rol_id == 1){
-            $miuseragent=$_SERVER['HTTP_USER_AGENT'];
-            $moviles=array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-            $detector=0;
-            $numMoviles=count($moviles);
-
-            for($i=0;$i<$numMoviles;$i++){
-                $comprobar=strpos($miuseragent,$moviles[$i]);
-                if($comprobar!=""){
-                    $detector=1;
-                }
-            }
-
             if($detector==1){
                 return View::make("usuario.createMovil");
             }else{
@@ -50,11 +46,11 @@ class UsuarioController extends BaseController {
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function store(){
         if(Auth::user()->rol_id == 1){
-            $cadenaRandom = str_random(10);
-            $data = Input::all();
+            $cadenaRandom = Str::random(10);
+            $data = Request::all();
             $data["password"] = "sakjcbbywgriuedlsd";
             $data["verify_password"] = $cadenaRandom;
 
@@ -78,7 +74,7 @@ class UsuarioController extends BaseController {
             $bitacora->modulo_id = 1;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             try{
                 Mail::send('emails.envioEnlaceUsuarioInterno', ['user' => $user], function($message) use ($user){
                         $message->to($user->email, $user->nombre.' '.$user->apellido_paterno)->subject('Enlace de acceso a SIRVOLAB');
@@ -93,19 +89,9 @@ class UsuarioController extends BaseController {
     }
 
     public function edit($id){
+        $detector = $this->detectarMovil();
+
         if(Auth::user()->rol_id == 1){
-            $miuseragent=$_SERVER['HTTP_USER_AGENT'];
-            $moviles=array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-            $detector=0;
-            $numMoviles=count($moviles);
-
-            for($i=0;$i<$numMoviles;$i++){
-                $comprobar=strpos($miuseragent,$moviles[$i]);
-                if($comprobar!=""){
-                    $detector=1;
-                }
-            }
-
             if($detector==1){
                 $register = Usuario::find($id);
                 return View::make('usuario.editMovil', compact("register"));
@@ -121,7 +107,7 @@ class UsuarioController extends BaseController {
         if(Auth::user()->rol_id == 1){
             $id = Crypt::decrypt($id);
             $user = Usuario::find($id);
-            $data = Input::all();
+            $data = Request::all();
             $validator = Usuario::validarUsuarioUpdate($data);
 
             if ($validator->fails())
@@ -153,13 +139,13 @@ class UsuarioController extends BaseController {
                 $convocatoria = Convocatoria::find($usuario->convocatoria_id);
                 $estatusConvocatoriaCerrada = 6;
                 $mensaje = "No es un registro asociado a una convocatoria";
-                
+
                 if($convocatoria){
                     if($convocatoria->convocatoria_estatus_id != $estatusConvocatoriaCerrada){
-                        $usuario->token_autorizacion = str_random(10);
+                        $usuario->token_autorizacion = Str::random(10);
                         $usuario->vigencia_token_autorizacion = Carbon::now()->addHour();
                         $usuario->save();
-                        
+
                         $bitacora = new Bitacora();
                         $bitacora->accion_realizada = "Token de acceso creado para: ".$usuario->curp;
                         $bitacora->fecha_accion = Carbon::now();
@@ -167,11 +153,11 @@ class UsuarioController extends BaseController {
                         $bitacora->modulo_id = 2;
                         $bitacora->usuario_id = Auth::user()->id;
                         $bitacora->save();
-                        
+
                         Mail::send('emails.envioTokenUsuarioInterno', ['usuario' => $usuario], function($message) use ($usuario){
                             $message->to($usuario->correo_electronico_notificaciones, $usuario->nombre.' '.$usuario->apellido_paterno)->subject('Notificación SIRVOLAB');
                         });
-                        
+
                         return Redirect::to('/convocatoria/asignarComite/'.$usuario->convocatoria_id)->with('messageUpdate', 'Token creado y enviado');
                     }else{
                         return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
@@ -185,18 +171,19 @@ class UsuarioController extends BaseController {
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function enviarFormularioEdit($id, $tipo){
         if(Auth::user()->rol_id == 1){
+            $mensaje = "No es un registro asociado a una convocatoria";
             try{
                 $id = Crypt::decrypt($id);
                 $convocatoriaPadron = ConvocatoriaPadron::find($id);
                 $convocatoria = Convocatoria::find($convocatoriaPadron->convocatoria_id);
                 $estatusConvocatoriaRegistro = 2;
                 $mensaje = "No es un registro asociado a una convocatoria";
-                
+
                 if($convocatoria){
-                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaRegistro){   
+                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaRegistro){
                         return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
                     }
                 }else{
@@ -205,7 +192,7 @@ class UsuarioController extends BaseController {
             }catch (Exception $e){
                 return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
             }
-            
+
             if($convocatoriaPadron->correo_electronico == null){
                 return Redirect::to('/convocatoria/indexPadronConsulta/'.Crypt::encrypt($convocatoriaPadron->convocatoria_id).'/t/'.$tipo)->with('messageError', 'El usuario no ha registrado un correo electrónico válido');
             }
@@ -225,14 +212,15 @@ class UsuarioController extends BaseController {
             $bitacora->modulo_id = 2;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             return Redirect::to('/convocatoria/indexPadronConsulta/'.Crypt::encrypt($convocatoriaPadron->convocatoria_id).'/t/'.$tipo)->with('messageUpdate', 'Enlace de acceso enviado a usuario');
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function enviarFormularioEditComite($id, $tipo){
         if(Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3){
+            $mensaje = "No es un registro asociado a una convocatoria";
             try{
                 $id = Crypt::decrypt($id);
                 $convocatoriaPadron = ConvocatoriaPadron::find($id);
@@ -241,7 +229,7 @@ class UsuarioController extends BaseController {
                 $mensaje = "No es un registro asociado a una convocatoria";
 
                 if($convocatoria){
-                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaRegistro){   
+                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaRegistro){
                         return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
                     }
                 }else{
@@ -250,7 +238,7 @@ class UsuarioController extends BaseController {
             }catch (Exception $e){
                 return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
             }
-            
+
             if($convocatoriaPadron->correo_electronico == null){
                 return Redirect::to('/convocatoria/indexPadronComiteConsulta/'.$tipo)->with('messageError', 'El usuario no ha registrado un correo electrónico válido');
             }
@@ -270,23 +258,24 @@ class UsuarioController extends BaseController {
             $bitacora->modulo_id = 2;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             return Redirect::to('/convocatoria/indexPadronComiteConsulta/'.$tipo)->with('messageUpdate', 'Enlace de acceso enviado a usuario');
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function enviarTokenVoto($id, $tipo){
         if(Auth::user()->rol_id == 1){
+            $mensaje = "No es un registro asociado a una convocatoria";
             try{
                 $id = Crypt::decrypt($id);
                 $convocatoriaPadron = ConvocatoriaPadron::find($id);
                 $convocatoria = Convocatoria::find($convocatoriaPadron->convocatoria_id);
                 $estatusConvocatoriaConsulta = 4;
                 $mensaje = "No es un registro asociado a una convocatoria";
-                
+
                 if($convocatoria){
-                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaConsulta){   
+                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaConsulta){
                         return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
                     }
                 }else{
@@ -295,7 +284,7 @@ class UsuarioController extends BaseController {
             }catch (Exception $e){
                 return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
             }
-            
+
             if($convocatoriaPadron->correo_electronico == null){
                 return Redirect::to('/convocatoria/indexPadronConsulta/'.Crypt::encrypt($convocatoriaPadron->convocatoria_id).'/t/'.$tipo)->with('messageError', 'El usuario no ha registrado un correo electrónico válido');
             }
@@ -315,23 +304,24 @@ class UsuarioController extends BaseController {
             $bitacora->modulo_id = 2;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             return Redirect::to('/convocatoria/indexPadronConsulta/'.Crypt::encrypt($convocatoriaPadron->convocatoria_id).'/t/'.$tipo)->with('messageUpdate', 'Enlace de acceso enviado a usuario');
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function enviarTokenVotoComite($id, $tipo){
         if(Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3){
+            $mensaje = "No es un registro asociado a una convocatoria";
             try{
                 $id = Crypt::decrypt($id);
                 $convocatoriaPadron = ConvocatoriaPadron::find($id);
                 $convocatoria = Convocatoria::find($convocatoriaPadron->convocatoria_id);
                 $estatusConvocatoriaConsulta = 4;
                 $mensaje = "No es un registro asociado a una convocatoria";
-                
+
                 if($convocatoria){
-                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaConsulta){   
+                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaConsulta){
                         return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
                     }
                 }else{
@@ -340,7 +330,7 @@ class UsuarioController extends BaseController {
             }catch (Exception $e){
                 return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
             }
-                        
+
             if($convocatoriaPadron->correo_electronico == null){
                 return Redirect::to('/convocatoria/indexPadronComiteConsulta/'.$tipo)->with('messageError', 'El usuario no ha registrado un correo electrónico válido');
             }
@@ -360,23 +350,24 @@ class UsuarioController extends BaseController {
             $bitacora->modulo_id = 2;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             return Redirect::to('/convocatoria/indexPadronComiteConsulta/'.$tipo)->with('messageUpdate', 'Enlace de acceso enviado a usuario');
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function enviarTokenVotoComitePorCURP($id){
         if(Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3){
+            $mensaje = "No es un registro asociado a una convocatoria";
             try{
                 $id = Crypt::decrypt($id);
                 $convocatoriaPadron = ConvocatoriaPadron::find($id);
                 $convocatoria = Convocatoria::find($convocatoriaPadron->convocatoria_id);
                 $estatusConvocatoriaConsulta = 4;
                 $mensaje = "No es un registro asociado a una convocatoria";
-                
+
                 if($convocatoria){
-                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaConsulta){   
+                    if(!$convocatoria->convocatoria_estatus_id == $estatusConvocatoriaConsulta){
                         return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
                     }
                 }else{
@@ -385,7 +376,7 @@ class UsuarioController extends BaseController {
             }catch (Exception $e){
                 return View::make("errors.sinPeriodoRegistroVigente")->with('mensaje', $mensaje);
             }
-            
+
             $curp = null;
 
             if($convocatoriaPadron->correo_electronico == null){
@@ -407,16 +398,16 @@ class UsuarioController extends BaseController {
             $bitacora->modulo_id = 2;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             return Redirect::to('/convocatoria/busquedaPorCURP/')->with('mensaje', 'Enlace de acceso enviado a usuario')->with('curp', $curp);
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function enviarEnlaceAcceso($id){
         if(Auth::user()->rol_id == 1){
             $usuarioVerficacionCorreo = Usuario::find($id);
-            
+
             $usuarioVerficacionCorreo->default_password = true;
             $usuarioVerficacionCorreo->save();
             $convocatoria = Convocatoria::find($usuarioVerficacionCorreo->convocatoria_id);
@@ -436,26 +427,16 @@ class UsuarioController extends BaseController {
             $bitacora->modulo_id = 2;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             return Redirect::to('/convocatoria/asignarComite/'.$usuarioVerficacionCorreo->convocatoria_id)->with('messageUpdate', 'Enlace de acceso enviado a usuario');
         }else
             return View::make("errors.permisoDenegado");
     }
-    
+
     public function bitacora($id){
+        $detector = $this->detectarMovil();
+
         if(Auth::user()->rol_id == 1){
-            $miuseragent=$_SERVER['HTTP_USER_AGENT'];
-            $moviles=array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-            $detector=0;
-            $numMoviles=count($moviles);
-
-            for($i=0;$i<$numMoviles;$i++){
-                $comprobar=strpos($miuseragent,$moviles[$i]);
-                if($comprobar!=""){
-                    $detector=1;
-                }
-            }
-
             if($detector==1){
                 $register = Bitacora::where("accion_realizada_id", $id)->where("modulo_id", 1)->get();
                 return View::make('usuario.bitacoraMovil', compact("register"));

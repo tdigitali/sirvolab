@@ -39,7 +39,7 @@
                     </div>
                     <div class="fourteen wide column">
                         @if($register)
-                            {{Form::open(array('action' => array('AuthController@cambiarContrasenaSave',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+                            {!!Form::open(array('action' => array('AuthController@cambiarContrasenaSave',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
                                 <div style="background-color: transparent;">
                                     <br/>
                                     <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -76,12 +76,12 @@
                                         <div class="field">
                                             <label style="color: #235B4E; font-size: medium">Contraseña<span style="color: #10312B;">*</span></label>
                                             <label style="color: #235B4E; font-size: small; text-align: justify; width: 95%;">Escriba su contraseña de acceso, debe contener mínimo 8 y máximo 16 caracteres.</label>
-                                            {{Form::password('password', null)}}
+                                            {!!Form::password('password', null)!!}
                                         </div>
                                         <div class="field">
                                             <label style="color: #235B4E; font-size: medium">Confirme su Contraseña<span style="color: #10312B;">*</span></label>
                                             <label style="color: #235B4E; font-size: small; text-align: justify; width: 95%;">Eescriba nuevamente su contraseña de acceso, debe contener mínimo 8 y máximo 16 caracteres.</label>
-                                            {{Form::password('password_confirmation', null)}}
+                                            {!!Form::password('password_confirmation', null)!!}
                                         </div>
                                         <div style="text-align:center;">
                                             <div class="saveForm" style="background-color: transparent; margin: auto; display: block; width:120px; height:120px; border-radius:120px; border:5px solid #10312B; cursor: pointer;">
@@ -98,7 +98,7 @@
                                     </center>
                                 </div>
                                 <br/>
-                            {{Form::close()}}
+                            {!!Form::close()!!}
                         @else
                             <div style="background-color: transparent;">
                                 <br/>

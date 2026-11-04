@@ -37,9 +37,9 @@
 @endsection
 
 @section('content')
-    {{Form::open(array('action' => array('VotacionController@realizarVotoPorCargo',Crypt::encrypt($convocatoriaPadron->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
-        {{Form::hidden('seleccion1', null, ['id' => 'seleccion1'])}}
-        {{Form::hidden('seleccion2', null, ['id' => 'seleccion2'])}}
+    {!!Form::open(array('action' => array('VotacionController@realizarVotoPorCargo',Crypt::encrypt($convocatoriaPadron->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
+        {!!Form::hidden('seleccion1', null, ['id' => 'seleccion1'])!!}
+        {!!Form::hidden('seleccion2', null, ['id' => 'seleccion2'])!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="ui grid">
                 <div class="three wide column">                
@@ -50,7 +50,7 @@
                         <br/>
                         <div style="text-align: center; width: 90%; margin: 0 auto;">
                             <h1 class="ui header" style="color: #10312B; font-size: 180%;">
-                                {{Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
+                                {{\App\Models\Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
                             </h1>
                         </div>
                         <br/>
@@ -83,7 +83,7 @@
                             </div>
                             <br/>
                             <br/>
-                            @foreach(BoletaCandidato::where('boleta_id', $boleta->id)->get() as $boletaCandidato)
+                            @foreach(\App\Models\BoletaCandidato::where('boleta_id', $boleta->id)->get() as $boletaCandidato)
                                 <div id="boletaCandidato{{$boletaCandidato->id}}" class="two fields" style="background-color: transparent;">
                                     <div class="field" style="border-radius:10px; text-align: center; width: 100%; margin: 0 auto;">
                                         <a href="#" onclick="confirmarVoto({{$boletaCandidato->id}});" style="cursor: pointer; color: #235B4E; font-size: large">
@@ -161,7 +161,7 @@
                                         <br/>
                                         <div style="background-color: transparent; margin: auto; display: block; width:120px; height:120px; border-radius:120px; border:5px solid #10312B; cursor: pointer;" onmouseover="document.getElementById('regresar0').src = '/assets/img/enviar_blanco.png'; document.getElementById('regresarHR0').style.border = '1px solid white'; document.getElementById('regresarL0').style.color = 'white'; this.style.backgroundColor = '#10312B';" onmouseout="document.getElementById('regresar0').src = '/assets/img/enviar.png'; document.getElementById('regresarHR0').style.border = '1px solid #10312B'; document.getElementById('regresarL0').style.color = '#10312B'; this.style.backgroundColor = 'transparent';">
                                             <br/>
-                                            <a href="{{Ambiente::find(1)->nombre}}anularVoto/{{Crypt::encrypt($convocatoriaPadron->id)}}/{{Crypt::encrypt($boleta->id)}}" title="Anular Voto">
+                                            <a href="{{\App\Models\Ambiente::find(1)->nombre}}anularVoto/{{Crypt::encrypt($convocatoriaPadron->id)}}/{{Crypt::encrypt($boleta->id)}}" title="Anular Voto">
                                                 <img id="regresar0" style="margin: auto; width: 45%; height: 45%;" src="/assets/img/enviar.png" class="ui image">
                                                 <div style="background-color: transparent; text-align: center;">
                                                     <hr id="regresarHR0" style="border:1px solid #10312B; width: 50%;"/>
@@ -183,7 +183,7 @@
             </div>
             <br/>
         </div>
-    {{Form::close()}}
+    {!!Form::close()!!}
 @endsection
 
 @section('scripts-page')

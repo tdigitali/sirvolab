@@ -1,22 +1,33 @@
 <?php
-ini_set('max_execution_time','10000');
-//ini_set('post_max_size','15MB');
-//ini_set('upload_max_filesize','40MB');
+
+namespace App\Http\Controllers;
+
+use App\Models\Bitacora;
+use App\Models\Convocatoria;
+use App\Models\ConvocatoriaPadron;
+use App\Models\MotivoRechazo;
 use Carbon\Carbon;
+use Exception;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Str;
 
-class RegistroValidacionController extends BaseController {
+class RegistroValidacionController extends BaseController
+{
+    public function __construct()
+    {
+        // Antes era un ini_set() al inicio del archivo: cargas de padrón y
+        // archivos pueden tardar mucho (consulta a RENAPO por cada CURP).
+        ini_set('max_execution_time', '10000');
+    }
+
     public function registro($cad){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
-
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
+        $detector = $this->detectarMovil();
 
         try{
             $id = Crypt::decrypt($cad);
@@ -33,7 +44,7 @@ class RegistroValidacionController extends BaseController {
                     }
                 }else{
                     $mensaje = "No se cumplen las condiciones necesarias para registrarte a esta convocatoria";
-                    
+
                     if($detector == 1){
                         return View::make("errors.sinPeriodoRegistroVigenteMovil", compact("convocatoria"))->with('mensaje', $mensaje);
                     }else{
@@ -61,17 +72,7 @@ class RegistroValidacionController extends BaseController {
     }
 
     public function validaCURP($id){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
-
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
+        $detector = $this->detectarMovil();
 
         try{
             $id = Crypt::decrypt($id);
@@ -87,11 +88,11 @@ class RegistroValidacionController extends BaseController {
             }
         }
 
-        $data = Input::all();
+        $data = Request::all();
         $convocatoriaPadron = ConvocatoriaPadron::where('convocatoria_id', $convocatoria->id)->where('curp', trim(strtoupper($data["curp"])))->first();
         $correoElectronico = null;
         $correoElectronico2 = null;
-        
+
         if($convocatoriaPadron){
             if($convocatoriaPadron->fecha_registro != null){
                 $mensaje = 'El votante ya realizó el registro';
@@ -125,19 +126,9 @@ class RegistroValidacionController extends BaseController {
             return Redirect::back()->with('message', 'El CURP ingresado no se encuentra en el padrón de la convocatoria')->withInput($data);
         }
     }
-    
-    public function formularioEdit($id, $cadena){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
 
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
+    public function formularioEdit($id, $cadena){
+        $detector = $this->detectarMovil();
 
         try{
             $id = Crypt::decrypt($id);
@@ -193,7 +184,7 @@ class RegistroValidacionController extends BaseController {
                 }
             }else{
                 $mensaje = 'No fue posible validar el registro';
-                
+
                 if($detector == 1){
                     return View::make("errors.sinPeriodoRegistroVigenteMovil")->with('mensaje', $mensaje)->with('correoElectronico2', $correoElectronico2);
                 }else{
@@ -202,7 +193,7 @@ class RegistroValidacionController extends BaseController {
             }
         }else{
             $mensaje = 'No fue posible validar el registro';
-            
+
             if($detector == 1){
                 return View::make("errors.sinPeriodoRegistroVigenteMovil")->with('mensaje', $mensaje)->with('correoElectronico2', $correoElectronico2);
             }else{
@@ -210,29 +201,19 @@ class RegistroValidacionController extends BaseController {
             }
         }
     }
-    
-    public function registrarse($id){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
 
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
+    public function registrarse($id){
+        $detector = $this->detectarMovil();
 
         try{
             $id = Crypt::decrypt($id);
             $convocatoriaPadron = ConvocatoriaPadron::find($id);
-            $data = Input::all();
+            $data = Request::all();
             $correoElectronico = strtolower(str_replace(' ', '', $data['correo_electronico']));
             $correoElectronico2 = strtolower(str_replace(' ', '', $data['correo_electronico_2']));
         }catch (Exception $e){
             $mensaje = "No hay ninguna convocatoria asociada";
-            
+
             if($detector == 1){
                 return View::make("errors.sinPeriodoRegistroVigenteMovil")->with('mensaje', $mensaje);
             }else{
@@ -243,7 +224,7 @@ class RegistroValidacionController extends BaseController {
         if($convocatoriaPadron){
             if($convocatoriaPadron->fecha_registro != null){
                 $mensaje = 'El votante ya realizó el registro';
-                
+
                 if($detector == 1){
                     return View::make("errors.sinPeriodoRegistroVigenteMovil")->with('mensaje', $mensaje);
                 }else{
@@ -251,7 +232,7 @@ class RegistroValidacionController extends BaseController {
                 }
             }
         }
-        
+
         if($correoElectronico){
             if(!strpos($correoElectronico, '@')){
                 $mensaje = 'Falta la arroba en el correo electrónico, deberá cargar los archivos nuevamente';
@@ -273,7 +254,7 @@ class RegistroValidacionController extends BaseController {
                 return View::make("registro.formulario", compact("convocatoriaPadron"), compact("correoElectronico"))->with('mensaje', $mensaje)->with('correoElectronico2', $correoElectronico2);
             }
         }
-        
+
         if($correoElectronico != $correoElectronico2){
             $mensaje = 'Los campos de correo electrónico no corresponden, deberá cargar los archivos nuevamente';
 
@@ -295,7 +276,7 @@ class RegistroValidacionController extends BaseController {
             }
         }
 
-        if(Input::hasFile("memoria_documental_ruta_1") && Input::hasFile("memoria_documental_ruta_2") && Input::hasFile("memoria_documental_ruta_3")){
+        if(Request::hasFile("memoria_documental_ruta_1") && Request::hasFile("memoria_documental_ruta_2") && Request::hasFile("memoria_documental_ruta_3")){
             $path = "/archivos/".$convocatoriaPadron->convocatoria_id."/";
             $convocatoriaPadron->fill($data);
             $convocatoriaPadron->fecha_registro = Carbon::now();
@@ -303,13 +284,13 @@ class RegistroValidacionController extends BaseController {
 
             try{
                 if(!File::isDirectory(public_path().$path)){
-                    File::makeDirectory(public_path().$path);
+                    File::makeDirectory(public_path().$path, 0777, true);
                 }
 
                 for($x = 1; $x < 4; $x++){
-                    if(Input::hasFile("memoria_documental_ruta_".$x)){
-                        $cadenaRandom = str_random(15);
-                        $archivo = Input::file("memoria_documental_ruta_".$x);
+                    if(Request::hasFile("memoria_documental_ruta_".$x)){
+                        $cadenaRandom = Str::random(15);
+                        $archivo = Request::file("memoria_documental_ruta_".$x);
 
                         if(strtolower($archivo->getClientOriginalExtension().'') != "jpeg" && strtolower($archivo->getClientOriginalExtension().'') != "jpg" &&
                             strtolower($archivo->getClientOriginalExtension().'') != "png" && strtolower($archivo->getClientOriginalExtension().'') != "tiff" &&
@@ -351,43 +332,33 @@ class RegistroValidacionController extends BaseController {
             }
         }else
             $mensaje = 'No se cargaron las tres imagenes solicitadas';
-            
+
         if($detector==1){
             return View::make("registro.formularioMovil", compact("convocatoriaPadron"), compact("correoElectronico"))->with('mensaje', $mensaje)->with('correoElectronico2', $correoElectronico2);
         }else{
             return View::make("registro.formulario", compact("convocatoriaPadron"), compact("correoElectronico"))->with('mensaje', $mensaje)->with('correoElectronico2', $correoElectronico2);
         }
     }
-    
-    public function registrarseUpdate($id){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
 
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
+    public function registrarseUpdate($id){
+        $detector = $this->detectarMovil();
 
         try{
             $id = Crypt::decrypt($id);
             $convocatoriaPadron = ConvocatoriaPadron::find($id);
-            $data = Input::all();
+            $data = Request::all();
             $correoElectronico = strtolower(str_replace(' ', '', $data['correo_electronico']));
             $correoElectronico2 = strtolower(str_replace(' ', '', $data['correo_electronico_2']));
         }catch (Exception $e){
             $mensaje = "No hay ninguna convocatoria asociada";
-            
+
             if($detector == 1){
                 return View::make("errors.sinPeriodoRegistroVigenteMovil")->with('message', $mensaje);
             }else{
                 return View::make("errors.sinPeriodoRegistroVigente")->with('message', $mensaje);
             }
         }
-        
+
         if(!$correoElectronico){
             $mensaje = 'No fue capturado el correo electrónico para su registro, deberá cargar los archivos nuevamente';
 
@@ -407,7 +378,7 @@ class RegistroValidacionController extends BaseController {
                 return View::make("registro.formularioEdit", compact("convocatoriaPadron"))->with('mensaje', $mensaje)->with('correoElectronico', $correoElectronico)->with('correoElectronico2', $correoElectronico2);
             }
         }
-        
+
         if($correoElectronico){
             if(!strpos($correoElectronico, '@')){
                 $mensaje = 'Falta la arroba en el correo electrónico, deberá cargar los archivos nuevamente';
@@ -421,21 +392,21 @@ class RegistroValidacionController extends BaseController {
         }
 
         $validaCorreo = ConvocatoriaPadron::where('convocatoria_id', $convocatoriaPadron->convocatoria_id)->where('correo_electronico', $correoElectronico)->first();
-        
+
         if($validaCorreo){
             if($validaCorreo->id != $convocatoriaPadron->id){
                 $mensaje = 'No se puede registrar el mismo correo para esta convocatoria';
-                
+
                 if($detector == 1){
                     return View::make("registro.formularioEditMovil", compact("convocatoriaPadron"))->with('mensaje', $mensaje)->with('correoElectronico', $correoElectronico)->with('correoElectronico2', $correoElectronico2);
                 }else{
                     return View::make("registro.formularioEdit", compact("convocatoriaPadron"))->with('mensaje', $mensaje)->with('correoElectronico', $correoElectronico)->with('correoElectronico2', $correoElectronico2);
                 }
-                
+
             }
         }
 
-        if(Input::hasFile("memoria_documental_ruta_1") && Input::hasFile("memoria_documental_ruta_2") && Input::hasFile("memoria_documental_ruta_3")){
+        if(Request::hasFile("memoria_documental_ruta_1") && Request::hasFile("memoria_documental_ruta_2") && Request::hasFile("memoria_documental_ruta_3")){
             $path = "/archivos/".$convocatoriaPadron->convocatoria_id."/";
             $convocatoriaPadron->fill($data);
             $convocatoriaPadron->fecha_registro = Carbon::now();
@@ -443,13 +414,13 @@ class RegistroValidacionController extends BaseController {
 
             try{
                 if(!File::isDirectory(public_path().$path)){
-                    File::makeDirectory(public_path().$path);
+                    File::makeDirectory(public_path().$path, 0777, true);
                 }
 
                 for($x = 1; $x < 4; $x++){
-                    if(Input::hasFile("memoria_documental_ruta_".$x)){
-                        $cadenaRandom = str_random(15);
-                        $archivo = Input::file("memoria_documental_ruta_".$x);
+                    if(Request::hasFile("memoria_documental_ruta_".$x)){
+                        $cadenaRandom = Str::random(15);
+                        $archivo = Request::file("memoria_documental_ruta_".$x);
 
                         if(strtolower($archivo->getClientOriginalExtension().'') != "jpeg" && strtolower($archivo->getClientOriginalExtension().'') != "jpg" &&
                             strtolower($archivo->getClientOriginalExtension().'') != "png" && strtolower($archivo->getClientOriginalExtension().'') != "tiff" &&
@@ -478,7 +449,8 @@ class RegistroValidacionController extends BaseController {
                 $mensaje = 'Los archivos contienen un error';
 
                 if($detector == 1){
-                    return View::make("registro.formularioEdit", compact("convocatoriaPadronMovil"))->with('mensaje', $mensaje)->with('correoElectronico', $correoElectronico)->with('correoElectronico2', $correoElectronico2);
+                    // Antes: compact("convocatoriaPadronMovil") (variable inexistente) y la vista de escritorio.
+                    return View::make("registro.formularioEditMovil", compact("convocatoriaPadron"))->with('mensaje', $mensaje)->with('correoElectronico', $correoElectronico)->with('correoElectronico2', $correoElectronico2);
                 }else{
                     return View::make("registro.formularioEdit", compact("convocatoriaPadron"))->with('mensaje', $mensaje)->with('correoElectronico', $correoElectronico)->with('correoElectronico2', $correoElectronico2);
                 }
@@ -487,7 +459,7 @@ class RegistroValidacionController extends BaseController {
             $convocatoriaPadron->motivo_rechazo_id = null;
             $convocatoriaPadron->fecha_rechazo = null;
             $convocatoriaPadron->save();
-            
+
             if($detector == 1){
                 return View::make("registro.confirmacionMovil", compact("convocatoriaPadron"));
             }else{
@@ -495,29 +467,23 @@ class RegistroValidacionController extends BaseController {
             }
         }else
             $mensaje = 'No se cargaron las tres imagenes solicitadas';
-        
+
             if($detector == 1){
                 return View::make("registro.formularioEditMovil", compact("convocatoriaPadron"))->with('mensaje', $mensaje)->with('correoElectronico', $correoElectronico)->with('correoElectronico2', $correoElectronico2);
             }else{
                 return View::make("registro.formularioEdit", compact("convocatoriaPadron"))->with('mensaje', $mensaje)->with('correoElectronico', $correoElectronico)->with('correoElectronico2', $correoElectronico2);
             }
     }
-    
-    public function validacion(){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
 
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
+    public function validacion(){
+        $detector = $this->detectarMovil();
 
         if(Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3 || Auth::user()->rol_id == 4){
-            if(Convocatoria::find(Auth::user()->convocatoria_id)->convocatoria_estatus_id == 2){
+            // $convocatoria se usaba en compact() más abajo sin haberse definido
+            // (en PHP 8 eso es un error).
+            $convocatoria = Convocatoria::find(Auth::user()->convocatoria_id);
+
+            if($convocatoria->convocatoria_estatus_id == 2){
                 $validaRegistroNoTerminado = ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->where('validador_id', Auth::user()->id)->where('fecha_validacion', null)->where('motivo_rechazo_id', null)->where('fecha_rechazo', null)->first();
 
                 if($validaRegistroNoTerminado){
@@ -575,28 +541,18 @@ class RegistroValidacionController extends BaseController {
             }
         }
     }
-    
-    public function aprobacion($id){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
 
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
+    public function aprobacion($id){
+        $detector = $this->detectarMovil();
 
         if(Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3 || Auth::user()->rol_id == 4){
             try{
                 $id = Crypt::decrypt($id);
                 $convocatoriaPadron = ConvocatoriaPadron::find($id);
-                $data = Input::all();
+                $data = Request::all();
             }catch (Exception $e){
                 $mensaje = "No hay ninguna convocatoria asociada";
-                
+
                 if($detector == 1){
                     return View::make("errors.sinPeriodoRegistroVigenteMovil")->with('message', $mensaje);
                 }else{
@@ -610,7 +566,7 @@ class RegistroValidacionController extends BaseController {
             }else{
                 return Redirect::back()->with('message', 'No verificó la casilla de información correcta')->withInput($data);
             }
-            
+
             $bitacora = new Bitacora();
             $bitacora->accion_realizada = "Validación de votante: ".$convocatoriaPadron->curp;
             $bitacora->fecha_accion = Carbon::now();
@@ -618,7 +574,7 @@ class RegistroValidacionController extends BaseController {
             $bitacora->modulo_id = 2;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             try{
                 Mail::send('emails.envioConfirmacionValidacion', ['convocatoriaPadron' => $convocatoriaPadron], function($message) use ($convocatoriaPadron){
                         $message->to($convocatoriaPadron->correo_electronico)->subject('Confirmación de registro a SIRVOLAB');
@@ -626,13 +582,13 @@ class RegistroValidacionController extends BaseController {
             }catch(Exception $e){
                 return View::make("emails.falla", compact("e"));
             }
-            
+
             $resultado = "El votante: ".$convocatoriaPadron->curp." ha sido validado y podrá votar el día de la consulta.";
-            
+
             if($detector == 1){
-                return View::make("registro.resultadoValidacionMovil", compact("resultado", $resultado));
+                return View::make("registro.resultadoValidacionMovil", compact("resultado"));
             }else{
-                return View::make("registro.resultadoValidacion", compact("resultado", $resultado));
+                return View::make("registro.resultadoValidacion", compact("resultado"));
             }
         }else{
             if($detector == 1){
@@ -642,27 +598,17 @@ class RegistroValidacionController extends BaseController {
             }
         }
     }
-    
-    public function rechazo($id, $motivoId){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
 
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
-    
+    public function rechazo($id, $motivoId){
+        $detector = $this->detectarMovil();
+
         if(Auth::user()->rol_id == 2 || Auth::user()->rol_id == 3 || Auth::user()->rol_id == 4){
             $convocatoriaPadron = ConvocatoriaPadron::find($id);
             $convocatoriaPadron->motivo_rechazo_id = $motivoId;
             $convocatoriaPadron->fecha_rechazo = Carbon::now();
             $convocatoriaPadron->save();
             $motivo = MotivoRechazo::find($convocatoriaPadron->motivo_rechazo_id)->nombre;
-            
+
             $bitacora = new Bitacora();
             $bitacora->accion_realizada = "Rechazo de votante: ".$convocatoriaPadron->curp.", ".$motivo;
             $bitacora->fecha_accion = Carbon::now();
@@ -670,7 +616,7 @@ class RegistroValidacionController extends BaseController {
             $bitacora->modulo_id = 2;
             $bitacora->usuario_id = Auth::user()->id;
             $bitacora->save();
-            
+
             try{
                 Mail::send('emails.envioRechazo', ['convocatoriaPadron' => $convocatoriaPadron], function($message) use ($convocatoriaPadron){
                         $message->to($convocatoriaPadron->correo_electronico)->subject('Rechazo de registro a SIRVOLAB');
@@ -680,11 +626,11 @@ class RegistroValidacionController extends BaseController {
             }
 
             $resultado = $motivo.", por lo que el registro queda rechazado.";
-            
+
             if($detector==1){
-                return View::make("registro.resultadoValidacionMovil", compact("resultado", $resultado));
+                return View::make("registro.resultadoValidacionMovil", compact("resultado"));
             }else{
-                return View::make("registro.resultadoValidacion", compact("resultado", $resultado));
+                return View::make("registro.resultadoValidacion", compact("resultado"));
             }
         }else{
             if($detector == 1){
@@ -696,17 +642,7 @@ class RegistroValidacionController extends BaseController {
     }
 
     public function bitacora($id){
-        $miuseragent = $_SERVER['HTTP_USER_AGENT'];
-        $moviles = array("Mobile","iPhone","iPod","BlackBerry","Opera Mini","Sony","MOT","Nokia","samsung");
-        $detector = 0;
-        $numMoviles = count($moviles);
-
-        for($i=0;$i<$numMoviles;$i++){
-            $comprobar = strpos($miuseragent,$moviles[$i]);
-            if($comprobar != ""){
-                $detector = 1;
-            }
-        }
+        $detector = $this->detectarMovil();
 
         if(Auth::user()->rol_id == 1){
             $register = Bitacora::where("accion_realizada_id", $id)->where("modulo_id", 2)->get();

@@ -1,7 +1,7 @@
 @extends('layouts.ly_adminMovil')
 
 @section('content')
-    {{Form::open(array('action' => array('UsuarioController@update',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => array('UsuarioController@update',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%;">
@@ -24,17 +24,17 @@
                             <div class="content active">
                                 <div class="two fields">
                                     <div class="field">
-                                        <label style="color: #235B4E; font-size: large">Enlace {{Form::checkbox('default_password', null, $register->default_password,['class' => 'ui checkbox'])}}</label>
+                                        <label style="color: #235B4E; font-size: large">Enlace {!!Form::checkbox('default_password', null, $register->default_password,['class' => 'ui checkbox'])!!}</label>
                                         <label style="color: #235B4E; font-size: small">Marque la casilla para activar el enlace para cambio de contraseña</label>
                                     </div>
                                     <div class="field">
-                                        <label style="color: #235B4E; font-size: large">Habilitar Usuario {{Form::checkbox('enabled', null, $register->enabled,['class' => 'ui checkbox'])}}</label>
+                                        <label style="color: #235B4E; font-size: large">Habilitar Usuario {!!Form::checkbox('enabled', null, $register->enabled,['class' => 'ui checkbox'])!!}</label>
                                         <label style="color: #235B4E; font-size: small">Marque la casilla si desea habilitar al usuario</label>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <label style="color: #235B4E; font-size: large">Cambio de Contraseña</label>
-                                    <label style="color: #235B4E; font-size: 85%"><i id="contrasena_txt">{{Ambiente::find(1)->nombre}}cambiarContrasena/u/{{$register->email}}/d/{{$register->verify_password}}</i>&nbsp;&nbsp;<span onclick="copiar();"><i class="copy circle icon" style="font-size: large; cursor: pointer; color: #235B4E" onmouseover="this.style.color = '#10312B'" onmouseout="this.style.color = '#235B4E'"></i></span></label>
+                                    <label style="color: #235B4E; font-size: 85%"><i id="contrasena_txt">{{\App\Models\Ambiente::find(1)->nombre}}cambiarContrasena/u/{{$register->email}}/d/{{$register->verify_password}}</i>&nbsp;&nbsp;<span onclick="copiar();"><i class="copy circle icon" style="font-size: large; cursor: pointer; color: #235B4E" onmouseover="this.style.color = '#10312B'" onmouseout="this.style.color = '#235B4E'"></i></span></label>
                                 </div>
                                 <br/>
                                 <hr style="border:1px solid #10312B; width: 80%;"/>
@@ -43,17 +43,17 @@
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Nombre<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Máximo 100 caracteres</label>
-                                        {{ Form::text('nombre', $register->nombre, ['style' => 'color: grey', 'maxlength' => '100']) }}<br/>
+                                        {!! Form::text('nombre', $register->nombre, ['style' => 'color: grey', 'maxlength' => '100']) !!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Apellido Paterno<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Máximo 100 caracteres</label>
-                                        {{ Form::text('apellido_paterno', $register->apellido_paterno, ['style' => 'color: grey', 'maxlength' => '100']) }}<br/>
+                                        {!! Form::text('apellido_paterno', $register->apellido_paterno, ['style' => 'color: grey', 'maxlength' => '100']) !!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Apellido Materno</label>
                                         <label style="color: #235B4E; font-size: small">Máximo 100 caracteres</label>
-                                        {{ Form::text('apellido_materno', $register->apellido_materno, ['style' => 'color: grey', 'maxlength' => '100']) }}<br/>
+                                        {!! Form::text('apellido_materno', $register->apellido_materno, ['style' => 'color: grey', 'maxlength' => '100']) !!}<br/>
                                     </div>
                                 </div>
                                 <br/>
@@ -67,11 +67,11 @@
                                         <label style="color: #235B4E; font-size: large">Rol del Usuario<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Seleccione el rol del usuario</label>
                                         <div class="ui fluid selection dropdown">
-                                            {{ Form::hidden('rol_id', $register->rol_id) }}
+                                            {!! Form::hidden('rol_id', $register->rol_id) !!}
                                             <i style="color: #691C32;" class="list layout icon"></i>
                                             <div class="default text" style="color: #235B4E;">Por favor, selecciona una opción</div>
                                             <div class="menu">
-                                                @foreach(Rol::where('id', 1)->get() as $rol)
+                                                @foreach(\App\Models\Rol::where('id', 1)->get() as $rol)
                                                     <div class="item" style="color: #235B4E" data-value="{{ $rol->id }}">{{ $rol->nombre }}</div>
                                                 @endforeach
                                             </div>
@@ -102,7 +102,7 @@
                 </div>
             </div>
         </div>
-    {{ Form::close() }}   
+    {!! Form::close() !!}   
 @endsection
 
 @section('scripts-page')

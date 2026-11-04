@@ -1,14 +1,14 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
+namespace App\Models;
 
-class ConvocatoriaPadronCargado extends Eloquent implements UserInterface, RemindableInterface
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Validator;
+
+class ConvocatoriaPadronCargado extends Model
 {
-    use UserTrait, RemindableTrait, SoftDeletingTrait;
+    use SoftDeletes;
     protected $table = 'convocatoria_padron_cargado';
     protected $fillable = ['ruta','convocatoria_id','fecha_carga','registros_cargados'];
 
@@ -29,7 +29,7 @@ class ConvocatoriaPadronCargado extends Eloquent implements UserInterface, Remin
             'entidad_federativa_id'                            => 'required|exists:entidad_federativa,id',
             'registros_cargados'                               => 'required',
         ];
-        
+
         return Validator::make($data, $rules, self::$validation_messages);
     }
 }

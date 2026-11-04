@@ -49,10 +49,10 @@
                                                 <th colspan="2">&nbsp;&nbsp;Acciones</th>
                                             </thead>
                                             <tbody>
-                                                @foreach(Convocatoria::where('convocatoria_estatus_id', '!=', 6)->get() as $convocatoria)
+                                                @foreach(\App\Models\Convocatoria::where('convocatoria_estatus_id', '!=', 6)->get() as $convocatoria)
                                                     <tr>
                                                         <td>&nbsp;{{$convocatoria->nombre}}&nbsp;&nbsp;</td>
-                                                        <td>&nbsp;{{ConvocatoriaEstatus::find($convocatoria->convocatoria_estatus_id)->nombre}}&nbsp;&nbsp;</td>
+                                                        <td>&nbsp;{{\App\Models\ConvocatoriaEstatus::find($convocatoria->convocatoria_estatus_id)->nombre}}&nbsp;&nbsp;</td>
                                                         <td>
                                                             <a href="/convocatoria/asignarComite/{{$convocatoria->id}}" title="Gestión de Usuarios">
                                                                 <p style="font-size: 200%">

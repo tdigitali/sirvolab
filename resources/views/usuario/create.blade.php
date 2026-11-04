@@ -1,7 +1,7 @@
 @extends('layouts.ly_admin')
 
 @section('content')
-    {{Form::open(array('action' => 'UsuarioController@store' ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => 'UsuarioController@store' ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 51%; margin: 0 auto;">
@@ -63,11 +63,11 @@
                             <div class="content active">
                                 <div class="two fields">
                                     <div class="field">
-                                        <label style="color: #235B4E; font-size: large">Enlace {{Form::checkbox('default_password', null, true,['class' => 'ui checkbox'])}}</label>
+                                        <label style="color: #235B4E; font-size: large">Enlace {!!Form::checkbox('default_password', null, true,['class' => 'ui checkbox'])!!}</label>
                                         <label style="color: #235B4E; font-size: small">Marque la casilla para activar el enlace para cambio de contraseña</label>
                                     </div>
                                     <div class="field">
-                                        <label style="color: #235B4E; font-size: large">Habilitar Usuario {{Form::checkbox('enabled', null, true,['class' => 'ui checkbox'])}}</label>
+                                        <label style="color: #235B4E; font-size: large">Habilitar Usuario {!!Form::checkbox('enabled', null, true,['class' => 'ui checkbox'])!!}</label>
                                         <label style="color: #235B4E; font-size: small">Marque la casilla si desea habilitar al usuario</label>
                                     </div>
                                 </div>
@@ -77,17 +77,17 @@
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Nombre<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Máximo 100 caracteres</label>
-                                        {{ Form::text('nombre', null, ['style' => 'color: grey', 'maxlength' => '100']) }}<br/>
+                                        {!! Form::text('nombre', null, ['style' => 'color: grey', 'maxlength' => '100']) !!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Apellido Paterno<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Máximo 100 caracteres</label>
-                                        {{ Form::text('apellido_paterno', null, ['style' => 'color: grey', 'maxlength' => '100']) }}<br/>
+                                        {!! Form::text('apellido_paterno', null, ['style' => 'color: grey', 'maxlength' => '100']) !!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Apellido Materno</label>
                                         <label style="color: #235B4E; font-size: small">Máximo 100 caracteres</label>
-                                        {{ Form::text('apellido_materno', null, ['style' => 'color: grey', 'maxlength' => '100']) }}<br/>
+                                        {!! Form::text('apellido_materno', null, ['style' => 'color: grey', 'maxlength' => '100']) !!}<br/>
                                     </div>
                                 </div>
                                 <br/>
@@ -95,17 +95,17 @@
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Correo Electrónico (Usuario)<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Escriba su correo institucional</label>
-                                        {{Form::text('email', null, ['style' => 'color: grey', 'maxlength' => '60'])}}<br/>
+                                        {!!Form::text('email', null, ['style' => 'color: grey', 'maxlength' => '60'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Rol del Usuario<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Seleccione el rol del usuario</label>
                                         <div class="ui fluid selection dropdown">
-                                            {{Form::hidden('rol_id', null)}}
+                                            {!!Form::hidden('rol_id', null)!!}
                                             <i style="color: #691C32;" class="list layout icon"></i>
                                             <div class="default text" style="color: #235B4E;">Por favor, selecciona una opción</div>
                                             <div class="menu">
-                                                @foreach(Rol::where('id', 1)->get() as $rol)
+                                                @foreach(\App\Models\Rol::where('id', 1)->get() as $rol)
                                                     <div class="item" style="color: #235B4E" data-value="{{ $rol->id }}">{{ $rol->nombre }}</div>
                                                 @endforeach
                                             </div>
@@ -123,7 +123,7 @@
                 </div>
             </div>
         </div>
-    {{ Form::close() }}   
+    {!! Form::close() !!}   
 @endsection
 
 @section('scripts-page')

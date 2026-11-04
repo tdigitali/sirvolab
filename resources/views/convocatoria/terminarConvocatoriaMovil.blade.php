@@ -11,7 +11,7 @@
 @endsection
 
 @section('content')
-    {{Form::open(array('action' => array('ConvocatoriaController@terminarConvocatoriaUpdate',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => array('ConvocatoriaController@terminarConvocatoriaUpdate',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <br/>
             <div class="sixteen wide column">
@@ -59,7 +59,7 @@
                             <div class="field">
                                 <label style="color: #10312B; font-size: medium">Describa la razón de terminar anticipadamente<span style="color: #611232;">*</span></label>
                                 <label style="color: #10312B; font-size: small">Máximo 200 caracteres</label>
-                                {{ Form::textArea('razon_termino', null, ['style' => 'color: grey', 'maxlength' => '200', 'rows' => '4']) }}<br/>
+                                {!! Form::textArea('razon_termino', null, ['style' => 'color: grey', 'maxlength' => '200', 'rows' => '4']) !!}<br/>
                             </div>
                             <br/>
                             <div class="saveForm" style="background-color: transparent; margin: auto; display: block; width:120px; height:120px; border-radius:120px; border:5px solid #10312B; cursor: pointer;" onmouseover="document.getElementById('guardar').src = '/assets/img/guardar_blanco.png'; document.getElementById('guardarHR').style.border = '1px solid white'; document.getElementById('guardarL').style.color = 'white'; this.style.backgroundColor = '#10312B';" onmouseout="document.getElementById('guardar').src = '/assets/img/guardar.png'; document.getElementById('guardarHR').style.border = '1px solid #10312B'; document.getElementById('guardarL').style.color = '#10312B'; this.style.backgroundColor = 'transparent';">
@@ -84,7 +84,7 @@
                 </div>
             </div>
         </div>
-    {{ Form::close() }}   
+    {!! Form::close() !!}   
 @endsection
 
 @section('scripts-page')

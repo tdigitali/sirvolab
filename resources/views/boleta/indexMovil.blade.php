@@ -58,14 +58,14 @@
                         <tr>
                             <td>&nbsp;{{$boleta->cargo_postulacion}}&nbsp;&nbsp;</td>
                             <td colspan="2" style="text-align: left;">
-                                @foreach(BoletaCandidato::where('boleta_id', $boleta->id)->get() as $candidato)
+                                @foreach(\App\Models\BoletaCandidato::where('boleta_id', $boleta->id)->get() as $candidato)
                                     <span style="border-radius: 20px; background-color: {{$candidato->planilla_color}};">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;<span>{{$candidato->nombre_completo}}</span><br/>
                                 @endforeach
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                @if(Convocatoria::find($boleta->convocatoria_id)->aprobacion_confirmacion_contrato)
+                                @if(\App\Models\Convocatoria::find($boleta->convocatoria_id)->aprobacion_confirmacion_contrato)
                                     &nbsp;
                                 @else
                                     <a href="/boleta/edit/{{$boleta->id}}" title="Editar">
@@ -76,7 +76,7 @@
                                 @endif
                             </td>
                             <td>
-                                @if(Convocatoria::find($boleta->convocatoria_id)->aprobacion_confirmacion_contrato)
+                                @if(\App\Models\Convocatoria::find($boleta->convocatoria_id)->aprobacion_confirmacion_contrato)
                                     &nbsp;
                                 @else
                                     <a href="/boleta/asignarCandidato/{{$boleta->id}}" title="Bitácora">

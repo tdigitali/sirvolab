@@ -45,7 +45,7 @@
 @endsection
 
 @section('content')
-    {{Form::open(array('action' => array('ConvocatoriaController@cargaPadronUpdate',Crypt::encrypt($convocatoria->id)) ,'class' => 'ui form', 'id' => "register_form", 'enctype' => "multipart/form-data"))}}
+    {!!Form::open(array('action' => array('ConvocatoriaController@cargaPadronUpdate',Crypt::encrypt($convocatoria->id)) ,'class' => 'ui form', 'id' => "register_form", 'enctype' => "multipart/form-data"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent; text-align: center;">
             <div class="ui grid">
                 <div class="one wide column">
@@ -154,7 +154,7 @@
                 <br/>
             </div>
         </div>
-    {{Form::close()}}
+    {!!Form::close()!!}
 @endsection
 
 @section('scripts-page')

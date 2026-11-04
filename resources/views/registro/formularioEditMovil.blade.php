@@ -56,7 +56,7 @@
 @endsection
 
 @section('content')
-    {{Form::open(array('action' => array('RegistroValidacionController@registrarseUpdate',Crypt::encrypt($convocatoriaPadron->id)) ,'class' => 'ui form', 'id' => "register_form", 'enctype' => "multipart/form-data"))}}
+    {!!Form::open(array('action' => array('RegistroValidacionController@registrarseUpdate',Crypt::encrypt($convocatoriaPadron->id)) ,'class' => 'ui form', 'id' => "register_form", 'enctype' => "multipart/form-data"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -64,7 +64,7 @@
                         Registrarse
                     </h1>
                     <h1 class="ui header" style="color: #235B4E; font-size: 120%;">
-                        {{Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
+                        {{\App\Models\Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
                     </h1>
                 </div>
             </div>
@@ -97,12 +97,12 @@
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Correo electrónico<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Escriba su correo de contacto</label>
-                                        {{Form::text('correo_electronico', $correoElectronico, ['id' => 'correo_electronico', 'style' => 'color: grey', 'maxlength' => '60'])}}<br/>
+                                        {!!Form::text('correo_electronico', $correoElectronico, ['id' => 'correo_electronico', 'style' => 'color: grey', 'maxlength' => '60'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Compruebe su correo electrónico<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Escriba nuevamente su correo de contacto</label>
-                                        {{Form::text('correo_electronico_2', $correoElectronico2, ['id' => 'correo_electronico_2', 'style' => 'color: grey', 'maxlength' => '60'])}}<br/>
+                                        {!!Form::text('correo_electronico_2', $correoElectronico2, ['id' => 'correo_electronico_2', 'style' => 'color: grey', 'maxlength' => '60'])!!}<br/>
                                     </div>
                                 </div>
                                 <hr style="border:1px solid #10312B; width: 80%;"/>
@@ -254,7 +254,7 @@
                 </div>
             </div>
         </div>
-    {{ Form::close() }}   
+    {!! Form::close() !!}   
 @endsection
 
 @section('scripts-page')

@@ -76,11 +76,11 @@
                     @if($tipo == 5)
                         @foreach($convocatoriaPadron as $padron)
                             <tr>
-                                <td>&nbsp;{{ConvocatoriaPadron::find($padron->convocatoria_padron_id)->curp}}&nbsp;&nbsp;</td>
-                                <td>&nbsp;{{ConvocatoriaPadron::find($padron->convocatoria_padron_id)->nombre_completo}}&nbsp;&nbsp;</td>
-                                <td>&nbsp;{{ConvocatoriaCentroTrabajo::find(ConvocatoriaPadron::find($padron->convocatoria_padron_id)->centro_trabajo_id)->nombre}}&nbsp;&nbsp;</td>
-                                <td>&nbsp;{{EntidadFederativa::find(ConvocatoriaPadron::find($padron->convocatoria_padron_id)->entidad_federativa_id)->nombre}}&nbsp;&nbsp;</td>
-                                <td colspan="3">{{Boleta::find($padron->boleta_id)->cargo_postulacion}}</td>
+                                <td>&nbsp;{{\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->curp}}&nbsp;&nbsp;</td>
+                                <td>&nbsp;{{\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->nombre_completo}}&nbsp;&nbsp;</td>
+                                <td>&nbsp;{{\App\Models\ConvocatoriaCentroTrabajo::find(\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->centro_trabajo_id)->nombre}}&nbsp;&nbsp;</td>
+                                <td>&nbsp;{{\App\Models\EntidadFederativa::find(\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->entidad_federativa_id)->nombre}}&nbsp;&nbsp;</td>
+                                <td colspan="3">{{\App\Models\Boleta::find($padron->boleta_id)->cargo_postulacion}}</td>
                             </tr>
                         @endforeach
                     @else
@@ -88,11 +88,11 @@
                             <tr>
                                 <td>&nbsp;{{$padron->curp}}&nbsp;&nbsp;</td>
                                 <td>&nbsp;{{$padron->nombre_completo}}&nbsp;&nbsp;</td>
-                                <td>&nbsp;{{ConvocatoriaCentroTrabajo::find($padron->centro_trabajo_id)->nombre}}&nbsp;&nbsp;</td>
-                                <td>&nbsp;{{EntidadFederativa::find($padron->entidad_federativa_id)->nombre}}&nbsp;&nbsp;</td>
+                                <td>&nbsp;{{\App\Models\ConvocatoriaCentroTrabajo::find($padron->centro_trabajo_id)->nombre}}&nbsp;&nbsp;</td>
+                                <td>&nbsp;{{\App\Models\EntidadFederativa::find($padron->entidad_federativa_id)->nombre}}&nbsp;&nbsp;</td>
                                 @if($padron->fecha_validacion)
                                     <td onclick="copiar('contrasena' + '{{$padron->id}}');">
-                                        {{Form::hidden('enlace', Ambiente::find(1)->nombre.'voto/'.Crypt::encrypt($padron->id).'/cad/'.Crypt::encrypt($padron->cadena_validacion), ['id' => 'contrasena'.$padron->id, 'style' => 'color: grey', 'maxlength' => '300'])}}
+                                        {!!Form::hidden('enlace', \App\Models\Ambiente::find(1)->nombre.'voto/'.Crypt::encrypt($padron->id).'/cad/'.Crypt::encrypt($padron->cadena_validacion), ['id' => 'contrasena'.$padron->id, 'style' => 'color: grey', 'maxlength' => '300'])!!}
                                         <a href="/usuario/enviarTokenVoto/{{Crypt::encrypt($padron->id)}}/t/{{$tipo}}" title="Copiar y enviar enlace de voto">
                                             <p style="font-size: 200%">
                                                 <i class="linkify icon" style="color: #235B4E" onmouseover="this.style.color = '#691C32'" onmouseout="this.style.color = '#235B4E'"></i>&nbsp;
@@ -105,7 +105,7 @@
                                     </td>
                                 @endif
                                 <td onclick="copiarToken('actualizacion' + '{{$padron->id}}');">
-                                    {{Form::hidden('token', Ambiente::find(1)->nombre.'formularioEdit/'.Crypt::encrypt($padron->id).'/cad/'.Crypt::encrypt($padron->cadena_validacion), ['id' => 'actualizacion'.$padron->id, 'style' => 'color: grey', 'maxlength' => '300'])}}
+                                    {!!Form::hidden('token', \App\Models\Ambiente::find(1)->nombre.'formularioEdit/'.Crypt::encrypt($padron->id).'/cad/'.Crypt::encrypt($padron->cadena_validacion), ['id' => 'actualizacion'.$padron->id, 'style' => 'color: grey', 'maxlength' => '300'])!!}
                                     <a href="/usuario/enviarFormularioEdit/{{Crypt::encrypt($padron->id)}}/t/{{$tipo}}" title="Copiar y enviar edición de formulario">
                                         <p style="font-size: 200%">
                                             <i class="edit icon" style="color: #235B4E" onmouseover="this.style.color = '#691C32'" onmouseout="this.style.color = '#235B4E'"></i>&nbsp;
@@ -125,7 +125,7 @@
                 </tbody>
             </table>
         </div>
-        {{$convocatoriaPadron->links()}}
+        {!!$convocatoriaPadron->links()!!}
     </div>
 @endsection
 

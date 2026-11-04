@@ -165,11 +165,12 @@
                         <br/>
                     </h2>
                     <h3 style="color: #10312B; text-align: center;  width: 70%;">
-                        {{$convocatoria->nombre}}
+                        {{-- Antes fallaba cuando no se enviaba $convocatoria (alta de administradores y de validadores). --}}
+                        {{ isset($convocatoria) ? $convocatoria->nombre : '' }}
                     </h3>
                     <div style="background-color: #3DAD93; width: 70%; border-radius: 15px 15px 15px 15px;">
                         <p style="color: red; font-size: 180%">
-                            <a href="{{Ambiente::find(1)->nombre}}cambiarContrasena/u/{{$user->email}}/d/{{$user->verify_password}}" style="color: white; text-decoration: none;">
+                            <a href="{{\App\Models\Ambiente::find(1)->nombre}}cambiarContrasena/u/{{$user->email}}/d/{{$user->verify_password}}" style="color: white; text-decoration: none;">
                                 Haz clic aquí para cambiar tu contraseña
                             </a>
                         </p>

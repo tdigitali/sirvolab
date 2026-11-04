@@ -54,7 +54,7 @@
                     </div>
                     <div class="nine wide column">
                         @if($register)
-                            {{Form::open(array('action' => array('AuthController@cambiarContrasenaSave',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+                            {!!Form::open(array('action' => array('AuthController@cambiarContrasenaSave',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
                                 <div style="background-color: transparent;">
                                     <br/>
                                     <div style="text-align: center; width: 150%; margin: 0 auto;">
@@ -90,12 +90,12 @@
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Contraseña<span style="color: #10312B;">*</span></label>
                                         <label style="color: #235B4E; font-size: small; text-align: justify; width: 150%; margin: 0 auto;">Escriba su contraseña de acceso, debe contener mínimo 8 y máximo 16 caracteres.</label>
-                                        {{Form::password('password', null)}}
+                                        {!!Form::password('password', null)!!}
                                     </div>
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Confirme su Contraseña<span style="color: #10312B;">*</span></label>
                                         <label style="color: #235B4E; font-size: small; text-align: justify; width: 150%; margin: 0 auto;">Eescriba nuevamente su contraseña de acceso, debe contener mínimo 8 y máximo 16 caracteres.</label>
-                                        {{Form::password('password_confirmation', null)}}
+                                        {!!Form::password('password_confirmation', null)!!}
                                     </div>
                                     <div style="text-align:center;">
                                         <div class="saveForm" style="background-color: transparent; margin: auto; display: block; width:120px; height:120px; border-radius:120px; border:5px solid #10312B; cursor: pointer;" onmouseover="document.getElementById('guardar').src = '/assets/img/guardar_blanco.png'; document.getElementById('guardarHR').style.border = '1px solid white'; document.getElementById('guardarL').style.color = 'white'; this.style.backgroundColor = '#10312B';" onmouseout="document.getElementById('guardar').src = '/assets/img/guardar.png'; document.getElementById('guardarHR').style.border = '1px solid #10312B'; document.getElementById('guardarL').style.color = '#10312B'; this.style.backgroundColor = 'transparent';">
@@ -111,7 +111,7 @@
                                     </div>
                                 </div>
                                 <br/>
-                            {{Form::close()}}
+                            {!!Form::close()!!}
                         @else
                             <div style="background-color: transparent;">
                                 <br/>

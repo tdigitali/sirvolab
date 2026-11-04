@@ -152,7 +152,7 @@
         <div style="text-align: left">
             <h3 style="color: #235B4E;">El SIRVOLAB te informa que en el siguiente enlace puedes cambiar tu contraseña y asi obtener el acceso al sistema:
                 <br/>
-                {{Ambiente::find(1)->nombre}}cambiarContrasena/u/{{$usuarioVerficacionCorreo->email}}/d/{{$usuarioVerficacionCorreo->verify_password}}
+                {{\App\Models\Ambiente::find(1)->nombre}}cambiarContrasena/u/{{$usuarioVerficacionCorreo->email}}/d/{{$usuarioVerficacionCorreo->verify_password}}
             </h3>
         </div>
         <div style="text-align: left">

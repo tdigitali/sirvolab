@@ -74,10 +74,10 @@
                         @foreach($convocatoriaPadron as $padron)
                             <tr>
                                 <td>
-                                    &nbsp;{{ConvocatoriaPadron::find($padron->convocatoria_padron_id)->curp}}&nbsp;&nbsp;
-                                    &nbsp;{{EntidadFederativa::find(ConvocatoriaPadron::find($padron->convocatoria_padron_id)->entidad_federativa_id)->nombre}}&nbsp;&nbsp;
+                                    &nbsp;{{\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->curp}}&nbsp;&nbsp;
+                                    &nbsp;{{\App\Models\EntidadFederativa::find(\App\Models\ConvocatoriaPadron::find($padron->convocatoria_padron_id)->entidad_federativa_id)->nombre}}&nbsp;&nbsp;
                                 </td>
-                                <td>{{Boleta::find($padron->boleta_id)->cargo_postulacion}}</td>
+                                <td>{{\App\Models\Boleta::find($padron->boleta_id)->cargo_postulacion}}</td>
                             </tr>
                         @endforeach
                     @else
@@ -108,7 +108,7 @@
                 </tbody>
             </table>
         </div>
-        {{$convocatoriaPadron->links()}}
+        {!!$convocatoriaPadron->links()!!}
         <br/>
         <div style="background-color: transparent; margin: auto; display: block; width:120px; height:120px; border-radius:120px; border:5px solid #10312B; cursor: pointer;">
             <br/>

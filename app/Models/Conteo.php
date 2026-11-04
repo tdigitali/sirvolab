@@ -1,13 +1,13 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
+namespace App\Models;
 
-class Conteo extends Eloquent implements UserInterface, RemindableInterface{
-    use UserTrait, RemindableTrait, SoftDeletingTrait;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Conteo extends Model
+{
+    use SoftDeletes;
     protected $table = 'conteo';
     protected $fillable = ['boleta_id'];
 }

@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    {{Form::open(array('action' => array('ConvocatoriaController@asignarValidadorUpdate',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => array('ConvocatoriaController@asignarValidadorUpdate',Crypt::encrypt($register->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -93,7 +93,7 @@
                                                         <td>{{$usuario->curp}}<br/>{{$usuario->nombre}}&nbsp;{{$usuario->apellido_paterno}}&nbsp;{{$usuario->apellido_materno}}&nbsp;&nbsp;</td>
                                                         <td>{{$usuario->email}}&nbsp;&nbsp;</td>
                                                         <td>{{$usuario->correo_electronico_notificaciones}}&nbsp;&nbsp;</td>
-                                                        <td>{{Rol::find($usuario->rol_id)->nombre}}&nbsp;&nbsp;</td>
+                                                        <td>{{\App\Models\Rol::find($usuario->rol_id)->nombre}}&nbsp;&nbsp;</td>
                                                         <td>
                                                             <a href="/convocatoria/eliminaValidador/{{$usuario->id}}" title="Eliminar Usuario">
                                                                 <p style="font-size: 200%">
@@ -125,17 +125,17 @@
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">CURP<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Máximo 18 caracteres</label>
-                                        {{ Form::text('curp', null, ['style' => 'color: grey', 'maxlength' => '200']) }}<br/>
+                                        {!! Form::text('curp', null, ['style' => 'color: grey', 'maxlength' => '200']) !!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Usuario<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Máximo 60 caracteres</label>
-                                        {{ Form::text('email', null, ['style' => 'color: grey', 'maxlength' => '60'])}}<br/>
+                                        {!! Form::text('email', null, ['style' => 'color: grey', 'maxlength' => '60'])!!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Correo Electrónico<span style="color: #691C32;">*</span></label>
                                         <label style="color: #10312B; font-size: small">Dirección para notificaciones</label>
-                                        {{ Form::text('correo_electronico_notificaciones', null, ['style' => 'color: grey', 'maxlength' => '60'])}}<br/>
+                                        {!! Form::text('correo_electronico_notificaciones', null, ['style' => 'color: grey', 'maxlength' => '60'])!!}<br/>
                                     </div>
                                 </div>
                                 <br/>
@@ -161,7 +161,7 @@
                 <p style="color: #691C32"><b>* Campos Obligatorios</b></p>
             </center>
         </div>
-    {{Form::close()}}
+    {!!Form::close()!!}
 @endsection
 
 @section('scripts-page')

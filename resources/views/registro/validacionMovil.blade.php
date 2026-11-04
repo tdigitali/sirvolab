@@ -14,7 +14,7 @@
 @endsection
 
 @section('content')
-    {{Form::open(array('action' => array('RegistroValidacionController@aprobacion', Crypt::encrypt($convocatoriaPadron->id)) ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => array('RegistroValidacionController@aprobacion', Crypt::encrypt($convocatoriaPadron->id)) ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -22,7 +22,7 @@
                         Validación de Votante
                     </h1>
                     <h1 class="ui header" style="color: #235B4E; font-size: 100%;">
-                        {{Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
+                        {{\App\Models\Convocatoria::find($convocatoriaPadron->convocatoria_id)->nombre}}
                     </h1>
                 </div>
             </div>
@@ -62,11 +62,11 @@
                                 <div class="three fields">
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Centro de trabajo</label>
-                                        <label style="color: #10312B; font-size: small">{{ConvocatoriaCentroTrabajo::find($convocatoriaPadron->centro_trabajo_id)->nombre}}</label>
+                                        <label style="color: #10312B; font-size: small">{{\App\Models\ConvocatoriaCentroTrabajo::find($convocatoriaPadron->centro_trabajo_id)->nombre}}</label>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Entidad Federativa</label>
-                                        <label style="color: #10312B; font-size: small">{{EntidadFederativa::find($convocatoriaPadron->entidad_federativa_id)->nombre}}</label>
+                                        <label style="color: #10312B; font-size: small">{{\App\Models\EntidadFederativa::find($convocatoriaPadron->entidad_federativa_id)->nombre}}</label>
                                     </div>
                                     <div class="field">
                                         <label style="color: #10312B; font-size: large">Fecha de registro</label>
@@ -143,7 +143,7 @@
                                 <br/>
                                 <div class="two fields">
                                     <div class="field">
-                                        <label style="color: #235B4E; font-size: large">Información correcta&nbsp;{{Form::checkbox('informacion_valida', null, false,['class' => 'ui checkbox'])}}</label>
+                                        <label style="color: #235B4E; font-size: large">Información correcta&nbsp;{!!Form::checkbox('informacion_valida', null, false,['class' => 'ui checkbox'])!!}</label>
                                         <label style="color: #235B4E; font-size: small">Marque la casilla para indicar que aprueba el registro</label>
                                     </div>
                                 </div>
@@ -151,11 +151,11 @@
                                     <label style="color: #235B4E; font-size: large">Motivo del rechazo</label>
                                     <label style="color: #235B4E; font-size: small">Seleccione el rol del usuario</label>
                                     <div class="ui fluid selection dropdown">
-                                        {{Form::hidden('motivo_rechazo_id', 8, ['id' => 'motivo_rechazo_id'])}}
+                                        {!!Form::hidden('motivo_rechazo_id', 8, ['id' => 'motivo_rechazo_id'])!!}
                                         <i style="color: #235B4E;" class="list layout icon"></i>
                                         <div class="default text" style="color: #235B4E;">Por favor, selecciona una opción</div>
                                         <div class="menu">
-                                            @foreach(MotivoRechazo::all() as $motivoRechazo)
+                                            @foreach(\App\Models\MotivoRechazo::all() as $motivoRechazo)
                                                 <div class="item" style="color: #235B4E" data-value="{{ $motivoRechazo->id }}">{{ $motivoRechazo->nombre }}</div>
                                             @endforeach
                                         </div>
@@ -207,7 +207,7 @@
                 </table>
             </div>
         </div>
-    {{ Form::close() }}   
+    {!! Form::close() !!}   
 @endsection
 
 @section('scripts-page')

@@ -1,13 +1,14 @@
 <?php
 
-use Illuminate\Auth\UserTrait;
-use Illuminate\Auth\UserInterface;
-use Illuminate\Auth\Reminders\RemindableTrait;
-use Illuminate\Auth\Reminders\RemindableInterface;
-use Illuminate\Database\Eloquent\SoftDeletingTrait;
+namespace App\Models;
 
-class Voto extends Eloquent implements UserInterface, RemindableInterface{
-    use UserTrait, RemindableTrait, SoftDeletingTrait;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Validator;
+
+class Voto extends Model
+{
+    use SoftDeletes;
     protected $table = 'voto';
     protected $fillable = ['convocatoria_padron_id', 'boleta_id'];
 
@@ -23,7 +24,7 @@ class Voto extends Eloquent implements UserInterface, RemindableInterface{
             'convocatoria_padron_id'               => 'required|exists:convocatoria_padron,id',
             'boleta_id'                            => 'required|exists:boleta,id'
         ];
-        
+
         return Validator::make($data, $rules, self::$validation_messages);
     }
 }

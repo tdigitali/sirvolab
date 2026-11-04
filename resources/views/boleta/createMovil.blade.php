@@ -1,7 +1,7 @@
 @extends('layouts.ly_adminMovil')
 
 @section('content')
-    {{Form::open(array('action' => 'BoletaController@store' ,'class' => 'ui form', 'id' => "register_form"))}}
+    {!!Form::open(array('action' => 'BoletaController@store' ,'class' => 'ui form', 'id' => "register_form"))!!}
         <div class="ui segment" id="content-page" style="background-color: transparent;">
             <div class="sixteen wide column">
                 <div style="text-align: center; width: 100%; margin: 0 auto;">
@@ -24,18 +24,18 @@
                             <div class="content active">
                                 <div class="two fields">
                                     <div class="field">
-                                        @if(Convocatoria::find(Auth::user()->convocatoria_id)->aprobacion_confirmacion_contrato)
+                                        @if(\App\Models\Convocatoria::find(Auth::user()->convocatoria_id)->aprobacion_confirmacion_contrato)
                                             <label style="color: #235B4E; font-size: large">Pregunta en la boleta<span style="color: #691C32;">*</span></label>
                                         @else
                                             <label style="color: #235B4E; font-size: large">Cargo a Postular<span style="color: #691C32;">*</span></label>
                                         @endif
                                         <label style="color: #235B4E; font-size: small">Máximo 200 caracteres</label>
-                                        {{ Form::text('cargo_postulacion', null, ['style' => 'color: grey', 'maxlength' => '200']) }}<br/>
+                                        {!! Form::text('cargo_postulacion', null, ['style' => 'color: grey', 'maxlength' => '200']) !!}<br/>
                                     </div>
                                     <div class="field">
                                         <label style="color: #235B4E; font-size: large">Número de Boleta<span style="color: #691C32;">*</span></label>
                                         <label style="color: #235B4E; font-size: small">Número Máximo de Asignación: 10</label>
-                                        {{ Form::number('numero_boleta', null, ['style' => 'color: grey', 'maxlength' => '10']) }}<br/>
+                                        {!! Form::number('numero_boleta', null, ['style' => 'color: grey', 'maxlength' => '10']) !!}<br/>
                                     </div>
                                 </div>
                                 <br/>
@@ -63,7 +63,7 @@
                 </div>
             </div>
         </div>
-    {{ Form::close() }}   
+    {!! Form::close() !!}   
 @endsection
 
 @section('scripts-page')

@@ -63,7 +63,7 @@
                         <label style="color: #235B4E; font-size: small">Ingrese el token que le llegó por correo</label>
                         <br/>
                         <br/>
-                        {{Form::text('token1', null, ['id' => 'token1', 'style' => 'color: grey', 'maxlength' => '10'])}}<br/>
+                        {!!Form::text('token1', null, ['id' => 'token1', 'style' => 'color: grey', 'maxlength' => '10'])!!}<br/>
                         <br/>
                         <hr style="border:1px solid #10312B; width: 80%;"/>
                         <p style="color: #691C32"><b>* El token tiene vigencia de una hora</b></p>
