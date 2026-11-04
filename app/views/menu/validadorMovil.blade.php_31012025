@@ -1,0 +1,147 @@
+@extends('layouts.ly_adminMovil')
+
+@section('content')
+    <div class="ui form">
+        <div class="ui segment" id="content-page" style="background-color: transparent;">
+            <div style="text-align: center; width: 61%; margin: 0 auto;">
+                <label class="ui header" style="color: #10312B; font-size: 300%;">
+                    SIRVOLAB
+                </label>
+                <br/>
+                <label class="ui header" style="color: #10312B; font-size: 150%;">
+                    Sistema Remoto de Votación Laboral
+                </label>
+            </div>
+            <br/>
+            <div class="ui grid">
+                <div class="sixteen wide column">
+                    <div class="ui styled">
+                        <center>
+                            <label class="ui header" style="color: #235B4E; font-size: 150%;">
+                                {{$convocatoria->nombre}}
+                            </label>
+                        </center>
+                        <div class="content active">
+                            <div class="ui styled accordion fluid" style="background-color: transparent;">
+                                <br/>
+                                <center>
+                                    <div class="title active" style="font-size: medium">
+                                        <label class="ui header" style="color: #12322B; font-size: 100%; font-weight: bolder; cursor: pointer;">
+                                            &nbsp;Información de la convocatoria
+                                        </label>
+                                        <hr style="border:1px solid #12322B; width: 100%; margin: 0;"/>
+                                        <br/>
+                                    </div>
+                                    <div class="content active">
+                                        <table align="center" style="width: 100%; font-size: 80%;">
+                                            <thead>
+                                                <th>&nbsp;&nbsp;Parte del proceso&nbsp;&nbsp;</th>
+                                                <th>&nbsp;&nbsp;Fecha</th>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>&nbsp;Inicio de registro y validación&nbsp;&nbsp;</td>
+                                                    <td>&nbsp;{{$convocatoria->fecha_registro_validacion_inicio}}&nbsp;&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;Fin de registro y validación&nbsp;&nbsp;</td>
+                                                    <td>&nbsp;{{$convocatoria->fecha_registro_validacion_fin}}&nbsp;&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;Inicio de consulta&nbsp;&nbsp;</td>
+                                                    <td>&nbsp;{{$convocatoria->fecha_consulta_inicio}}&nbsp;&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;Fin de consulta&nbsp;&nbsp;</td>
+                                                    <td>&nbsp;{{$convocatoria->fecha_consulta_fin}}&nbsp;&nbsp;</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>&nbsp;Publicación de resultados&nbsp;&nbsp;</td>
+                                                    <td>&nbsp;{{$convocatoria->fecha_publicacion_resultados}}&nbsp;&nbsp;</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <br/>
+                                        <label style="color: grey; font-size: 100%;">
+                                            &nbsp;Número de registros en el padrón: {{count(ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->get())}} 
+                                        </label>
+                                        <br/>
+                                        <label style="color: grey; font-size: 100%;">
+                                            &nbsp;Usuarios de comité: {{count(Usuario::where('convocatoria_id', Auth::user()->convocatoria_id)->get())}} 
+                                        </label>
+                                        <br/>
+                                        <label style="color: grey; font-size: 100%;">
+                                            &nbsp;Votantes registrados: {{count(ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->whereNotNull('fecha_registro')->get())}}
+                                        </label>
+                                        <br/>
+                                        <label style="color: grey; font-size: 100%;">
+                                            &nbsp;Votantes validados: {{count(ConvocatoriaPadron::where('convocatoria_id', Auth::user()->convocatoria_id)->whereNotNull('fecha_validacion')->get())}}
+                                        </label>
+                                    </div>
+                                    <div class="title" style="font-size: medium">
+                                        <label class="ui header" style="color: #12322B; font-size: 120%; font-weight: bolder; cursor: pointer;">
+                                            &nbsp;Validar registros
+                                        </label>
+                                        <hr style="border:1px solid #12322B; width: 80%; margin: 0;"/>
+                                        <br/>
+                                    </div>
+                                    <div class="content">
+                                        <div class="field">
+                                            <div style="text-align: center; background-color: transparent;" class="four wide column">
+                                                <a href="/validacion/">
+                                                    <img id="proyecto" style="margin: auto; width: 50%; height: 50%;" src="/assets/img/identity.png" class="ui image">
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </center>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="three wide column">
+                    <div style="background-color: transparent;">
+                        &nbsp;
+                    </div>
+                </div>
+            </div>
+        </div>
+   </div>
+@endsection
+
+@section('scripts-page')
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var formFunctions = {
+                saveForm: function(){
+                    $("#register_form").submit();
+                },
+            };
+            $(".saveForm").on("click",formFunctions.saveForm);
+            $('.ui.dropdown').dropdown();
+            $('.ui.accordion').accordion();
+            
+            $('.datepicker').pickadate({
+                monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                today: 'Hoy',
+                clear: 'Limpiar',
+                close: 'Cerrar',
+                selectMonths: true,
+                selectYears: 50,
+                format: 'yyyy-mm-dd',
+                max: new Date()
+            });
+            $('.datepicker-post').pickadate({
+                monthsFull: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+                weekdaysShort: ['Dom', 'Lun', 'Mar', 'Mie', 'Jue', 'Vie', 'Sab'],
+                today: 'Hoy',
+                clear: 'Limpiar',
+                close: 'Cerrar',
+                selectMonths: true,
+                selectYears: 50,
+                format: 'yyyy-mm-dd'
+            });
+        });
+    </script>
+@endsection
