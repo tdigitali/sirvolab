@@ -1,0 +1,5 @@
+# Generados por iniciar.sh
+/.env
+/viejo/codigo/
+# Esquema real exportado de producción (opcional, ver README)
+/datos/*.sql

@@ -1,0 +1,40 @@
+# Sistema ORIGINAL (Laravel 4.2 / PHP 5.6), solo para comparar en pruebas.
+# PHP 5.6 ya no recibe parches de seguridad: no exponga este contenedor a internet.
+FROM docker.io/library/php:5.6-apache
+
+# Debian 9 (stretch) está archivado: se usan los repositorios de archive.debian.org.
+# Sus llaves de firma ya expiraron, pero el archivo también está firmado con
+# llaves más nuevas: se toman de Debian 11 para seguir verificando las firmas.
+COPY --from=docker.io/library/debian:bullseye /usr/share/keyrings/debian-archive-keyring.gpg /etc/apt/trusted.gpg.d/debian-archive-bullseye.gpg
+RUN sed -i -e 's|deb.debian.org|archive.debian.org|g' -e 's|security.debian.org|archive.debian.org|g' \
+        -e '/stretch-updates/d' /etc/apt/sources.list \
+    && apt-get -o Acquire::Check-Valid-Until=false update \
+    && apt-get install -y --no-install-recommends libmcrypt-dev libpng-dev libjpeg-dev zlib1g-dev unzip git \
+    && docker-php-ext-configure gd --with-jpeg-dir=/usr --with-png-dir=/usr \
+    && docker-php-ext-install mcrypt pdo_mysql gd zip mbstring \
+    && a2enmod rewrite \
+    && rm -rf /var/lib/apt/lists/*
+
+# Composer 2.2 es la última versión que funciona con PHP 5.
+COPY --from=docker.io/library/composer:2.2 /usr/bin/composer /usr/bin/composer
+
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf \
+    && echo 'date.timezone = America/Mexico_City' > /usr/local/etc/php/conf.d/zona.ini
+
+WORKDIR /var/www/html
+# Código extraído del commit original por iniciar.sh (pruebas/viejo/codigo).
+COPY codigo/ /var/www/html/
+# Configuración del entorno 'local' (el contenedor se llama 'homestead').
+COPY config-local/ /var/www/html/app/config/local/
+
+# El token de RENAPO del código original está redactado: se usa el simulador.
+RUN sed -i 's|https://jovenesconstruyendoelfuturo.stps.gob.mx/bc/_testCurpRen2_bk.php|http://renapo/|' \
+        app/controllers/ConvocatoriaController.php app/controllers/BoletaController.php \
+    && mkdir -p app/storage/cache app/storage/logs app/storage/meta app/storage/sessions app/storage/views \
+    && COMPOSER_ALLOW_SUPERUSER=1 composer install --no-interaction --prefer-dist --no-dev \
+    && chown -R www-data:www-data app/storage
+
+COPY entrada.sh /usr/local/bin/entrada.sh
+CMD ["/usr/local/bin/entrada.sh"]

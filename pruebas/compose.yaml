@@ -1,0 +1,93 @@
+# Servidor de pruebas de SIRVOLAB (Podman sin root).
+# Levántelo con ./iniciar.sh; ver pruebas/README.md.
+#
+# Todos los puertos escuchan solo en 127.0.0.1: se accede por túnel SSH.
+#   8080 -> sistema original (Laravel 4.2 / PHP 5.6)
+#   8081 -> sistema migrado  (Laravel 13 / PHP 8.3)
+#   8025 -> Mailpit (bandeja con todos los correos que envían ambos sistemas)
+
+name: sirvolab-pruebas
+
+services:
+  db:
+    image: docker.io/library/mariadb:10.5   # misma versión que producción
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+    command: ["--character-set-server=utf8", "--collation-server=utf8_unicode_ci"]
+    volumes:
+      - db:/var/lib/mysql
+      - ./db/crear-bases.sh:/docker-entrypoint-initdb.d/crear-bases.sh:ro,Z
+    healthcheck:
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-p${DB_ROOT_PASSWORD}"]
+      interval: 5s
+      retries: 30
+
+  nuevo:
+    image: localhost/sirvolab-nuevo
+    build:
+      context: ..
+      dockerfile: pruebas/nuevo/Containerfile
+    restart: unless-stopped
+    depends_on: [db, mailpit, renapo]
+    ports: ["127.0.0.1:8081:80"]
+    environment:
+      APP_NAME: SIRVOLAB
+      APP_ENV: pruebas
+      APP_DEBUG: "true"
+      APP_KEY: ${APP_KEY}
+      APP_URL: ${URL_NUEVO}
+      LOG_CHANNEL: stderr
+      LOG_LEVEL: debug
+      DB_CONNECTION: mysql
+      DB_HOST: db
+      DB_DATABASE: sirvolab_nuevo
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SESSION_DRIVER: file
+      CACHE_STORE: file
+      QUEUE_CONNECTION: sync
+      MAIL_MAILER: smtp
+      MAIL_HOST: mailpit
+      MAIL_PORT: "1025"
+      MAIL_FROM_ADDRESS: sirvolab@pruebas.test
+      MAIL_FROM_NAME: SIRVOLAB (migrado, pruebas)
+      RENAPO_URL: http://renapo/
+      RENAPO_TOKEN: simulador
+    volumes:
+      - archivos:/datos
+
+  viejo:
+    image: localhost/sirvolab-viejo
+    build:
+      context: ./viejo
+      dockerfile: Containerfile
+    restart: unless-stopped
+    hostname: homestead   # así Laravel 4 usa la configuración app/config/local
+    depends_on: [db, mailpit, renapo]
+    ports: ["127.0.0.1:8080:80"]
+    environment:
+      APP_KEY: ${APP_KEY}
+      URL_VIEJO: ${URL_VIEJO}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - archivos:/datos
+
+  renapo:
+    image: localhost/sirvolab-nuevo
+    restart: unless-stopped
+    command: ["php", "-S", "0.0.0.0:80", "/renapo/index.php"]
+    volumes:
+      - ./renapo:/renapo:ro,Z
+
+  mailpit:
+    image: docker.io/axllent/mailpit:v1.27
+    restart: unless-stopped
+    ports: ["127.0.0.1:8025:8025"]
+
+volumes:
+  db:
+  archivos:

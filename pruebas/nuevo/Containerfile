@@ -1,0 +1,26 @@
+# Sistema MIGRADO (Laravel 13 / PHP 8.3). Se construye desde la raíz del repo.
+FROM docker.io/library/php:8.3-apache
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libpng-dev libjpeg62-turbo-dev libfreetype6-dev libzip-dev unzip git \
+    && docker-php-ext-configure gd --with-jpeg --with-freetype \
+    && docker-php-ext-install pdo_mysql gd zip \
+    && a2enmod rewrite \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=docker.io/library/composer:2 /usr/bin/composer /usr/bin/composer
+
+ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
+RUN sed -ri 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri 's!AllowOverride None!AllowOverride All!g' /etc/apache2/apache2.conf \
+    && printf 'date.timezone = America/Mexico_City\nupload_max_filesize = 40M\npost_max_size = 50M\nmemory_limit = 512M\n' > /usr/local/etc/php/conf.d/sirvolab.ini
+
+WORKDIR /var/www/html
+COPY . /var/www/html/
+# Se instalan también las dependencias de desarrollo: Faker se usa para los datos de prueba.
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-interaction --prefer-dist --optimize-autoloader \
+    && rm -f .env \
+    && chown -R www-data:www-data storage bootstrap/cache
+
+COPY pruebas/nuevo/entrada.sh /usr/local/bin/entrada.sh
+CMD ["/usr/local/bin/entrada.sh"]
