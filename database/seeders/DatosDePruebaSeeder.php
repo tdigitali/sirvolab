@@ -45,6 +45,29 @@ class DatosDePruebaSeeder extends Seeder
 
     private Generator $faker;
 
+    // Faker no trae nombres de México (es_MX cae a inglés): listas propias.
+    private const NOMBRES = [
+        'male' => ['JOSÉ', 'JUAN', 'LUIS', 'CARLOS', 'JORGE', 'MIGUEL', 'FRANCISCO', 'ALEJANDRO', 'ROBERTO', 'FERNANDO', 'RICARDO', 'EDUARDO',
+            'ARTURO', 'MANUEL', 'JAVIER', 'RAÚL', 'SERGIO', 'ANTONIO', 'DANIEL', 'PEDRO', 'HÉCTOR', 'ÓSCAR', 'GERARDO', 'ALBERTO', 'ENRIQUE'],
+        'female' => ['MARÍA', 'GUADALUPE', 'ANA', 'JUANA', 'LAURA', 'PATRICIA', 'VERÓNICA', 'GABRIELA', 'ROSA', 'ELIZABETH', 'ALEJANDRA',
+            'LETICIA', 'ADRIANA', 'CLAUDIA', 'SILVIA', 'MARTHA', 'MÓNICA', 'DANIELA', 'SOFÍA', 'FERNANDA', 'KARLA', 'LUCÍA', 'BEATRIZ', 'IRMA'],
+    ];
+
+    private const APELLIDOS = ['HERNÁNDEZ', 'GARCÍA', 'MARTÍNEZ', 'LÓPEZ', 'GONZÁLEZ', 'RODRÍGUEZ', 'PÉREZ', 'SÁNCHEZ', 'RAMÍREZ', 'CRUZ',
+        'FLORES', 'GÓMEZ', 'MORALES', 'VÁZQUEZ', 'REYES', 'JIMÉNEZ', 'TORRES', 'DÍAZ', 'GUTIÉRREZ', 'RUIZ', 'MENDOZA', 'AGUILAR',
+        'ORTIZ', 'MORENO', 'CASTILLO', 'ROMERO', 'ÁLVAREZ', 'MÉNDEZ', 'CHÁVEZ', 'RIVERA', 'JUÁREZ', 'RAMOS', 'DOMÍNGUEZ', 'HERRERA',
+        'MEDINA', 'CASTRO', 'VARGAS', 'GUZMÁN', 'VELÁZQUEZ', 'ROJAS'];
+
+    private function nombre(string $sexo): string
+    {
+        return $this->faker->randomElement(self::NOMBRES[$sexo]);
+    }
+
+    private function apellido(): string
+    {
+        return $this->faker->randomElement(self::APELLIDOS);
+    }
+
     private string $hash;
 
     public function run(): void
@@ -56,7 +79,7 @@ class DatosDePruebaSeeder extends Seeder
             throw new RuntimeException('La tabla usuario ya tiene registros: los datos de prueba solo se cargan en una base vacía.');
         }
 
-        $this->faker = Faker::create('es_MX');
+        $this->faker = Faker::create();
         $this->faker->seed(2026);
         $this->hash = Hash::make(self::CONTRASENA);
 
@@ -184,7 +207,7 @@ class DatosDePruebaSeeder extends Seeder
         $filasExcel = [];
         for ($i = 1; $i <= 40; $i++) {
             $sexo = $this->faker->randomElement(['male', 'female']);
-            $nombre = mb_strtoupper($this->faker->firstName($sexo).' '.$this->faker->lastName().' '.$this->faker->lastName());
+            $nombre = $this->nombre($sexo).' '.$this->apellido().' '.$this->apellido();
             $entidad = $this->faker->numberBetween(1, 32);
             $centro = $this->faker->randomElement($centros);
             $curp = $this->curp($sexo === 'male' ? 'H' : 'M');
@@ -247,7 +270,7 @@ class DatosDePruebaSeeder extends Seeder
             $boleta = Boleta::forceCreate(['cargo_postulacion' => 'Secretaría General', 'numero_boleta' => 1, 'convocatoria_id' => $c->id, 'nulos' => 0]);
             $opciones = [];
             foreach (['#1f77b4', '#ff7f0e', '#2ca02c', '#9467bd'] as $color) {
-                $opciones[] = [mb_strtoupper($this->faker->firstName().' '.$this->faker->lastName()), $color];
+                $opciones[] = [$this->nombre('male').' '.$this->apellido().' '.$this->apellido(), $color];
             }
         }
 
@@ -294,9 +317,9 @@ class DatosDePruebaSeeder extends Seeder
         $sexo = $this->faker->randomElement(['male', 'female']);
 
         return array_merge([
-            'nombre' => mb_strtoupper($this->faker->firstName($sexo)),
-            'apellido_paterno' => mb_strtoupper($this->faker->lastName()),
-            'apellido_materno' => mb_strtoupper($this->faker->lastName()),
+            'nombre' => $this->nombre($sexo),
+            'apellido_paterno' => $this->apellido(),
+            'apellido_materno' => $this->apellido(),
             'curp' => $this->curp($sexo === 'male' ? 'H' : 'M'),
             'email' => $email,
             'correo_electronico_notificaciones' => $email,

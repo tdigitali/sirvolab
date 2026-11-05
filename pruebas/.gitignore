@@ -3,3 +3,4 @@
 /viejo/codigo/
 # Esquema real exportado de producción (opcional, ver README)
 /datos/*.sql
+/.iniciar.log

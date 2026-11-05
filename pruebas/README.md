@@ -17,7 +17,8 @@ lado, con **datos inventados**, para comparar que se comporten igual.
   Para probar errores use CURPs que empiecen con `BAJA` (dada de baja),
   `DEFU` (defunción), `NOEX` (no encontrada) o `VACI` (servicio caído).
 - Ambos sistemas comparten la misma llave (`APP_KEY`), así que un enlace de
-  voto generado por uno sirve en el otro.
+  voto generado por uno sirve en el otro (se verificó: un enlace generado por
+  el sistema migrado abre y vota en el original).
 - Los puertos solo escuchan en `127.0.0.1`: desde internet no se ve nada.
 
 ## 1. Preparar el servidor (una sola vez)
@@ -59,8 +60,8 @@ git clone https://github.com/tdigitali/sirvolab.git
 cd sirvolab/pruebas && ./iniciar.sh
 ```
 
-La primera vez tarda varios minutos (descarga imágenes y dependencias). El
-script:
+La primera vez tarda varios minutos (descarga imágenes y dependencias). La
+salida detallada de Podman queda en `pruebas/.iniciar.log`. El script:
 
 1. Crea `pruebas/.env` con contraseñas y llave aleatorias.
 2. Extrae el código original del historial de git.
@@ -102,6 +103,7 @@ voto desde el sistema, o copie el enlace desde la lista del padrón.
 | Ver errores del sistema original | `podman-compose exec viejo tail -f app/storage/logs/laravel.log` |
 | Actualizar al último código | `git pull && ./iniciar.sh` |
 | Empezar de cero con datos nuevos | `./iniciar.sh --reiniciar-datos` |
+| Reiniciar sin reconstruir imágenes | `./iniciar.sh --sin-construir` |
 | Apagar todo | `podman-compose down` |
 
 ## Usar el esquema real (recomendado)

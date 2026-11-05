@@ -2,13 +2,25 @@
 # Levanta el entorno de pruebas de SIRVOLAB con Podman (sin root).
 #   ./iniciar.sh            construye, levanta y (la primera vez) carga datos inventados
 #   ./iniciar.sh --reiniciar-datos   borra las bases y vuelve a generar los datos
+#   ./iniciar.sh --sin-construir     levanta con las imágenes ya construidas
 set -euo pipefail
+REINICIAR=0; CONSTRUIR=1
+for opcion in "$@"; do
+    case "$opcion" in
+        --reiniciar-datos) REINICIAR=1 ;;
+        --sin-construir) CONSTRUIR=0 ;;
+        *) echo "Opción desconocida: $opcion" >&2; exit 1 ;;
+    esac
+done
 cd "$(dirname "$0")"
 REPO="$(git rev-parse --show-toplevel)"
 # Commit con el código original (Laravel 4.2), para comparar contra el migrado.
 COMMIT_LEGADO=a9826c7
 
-compose() { podman-compose -f compose.yaml "$@"; }
+# La salida de podman-compose (incluye contraseñas) va a .iniciar.log.
+compose() { podman-compose -f compose.yaml "$@" >>.iniciar.log 2>&1 || { tail -40 .iniciar.log; exit 1; }; }
+contenedor() { podman ps -q --filter label=com.docker.compose.project=sirvolab-pruebas --filter "label=com.docker.compose.service=$1" | head -1; }
+en() { local c; c="$(contenedor "$1")"; shift; podman exec -i "$c" "$@"; }
 aleatorio() { tr -dc 'A-Za-z0-9' </dev/urandom | head -c "$1" || true; }
 paso() { printf '\n==> %s\n' "$*"; }
 
@@ -31,25 +43,28 @@ if [ ! -d viejo/codigo ]; then
 fi
 
 # 3. Imágenes.
-paso "Construyendo imagen del sistema original (PHP 5.6)"
-podman build -t localhost/sirvolab-viejo -f viejo/Containerfile viejo
-paso "Construyendo imagen del sistema migrado (PHP 8.3)"
-podman build -t localhost/sirvolab-nuevo -f nuevo/Containerfile "$REPO"
+if [ "$CONSTRUIR" = 1 ]; then
+    paso "Construyendo imagen del sistema original (PHP 5.6)"
+    podman build -t localhost/sirvolab-viejo -f viejo/Containerfile viejo
+    paso "Construyendo imagen del sistema migrado (PHP 8.3)"
+    podman build -t localhost/sirvolab-nuevo -f nuevo/Containerfile "$REPO"
+fi
 
 # 4. Contenedores.
-if [ "${1:-}" = "--reiniciar-datos" ]; then
+if [ "$REINICIAR" = 1 ]; then
     paso "Borrando bases de datos y archivos"
     compose down -v
 fi
 paso "Levantando contenedores"
+: > .iniciar.log
 compose up -d
 
 paso "Esperando a MariaDB"
 for _ in $(seq 1 60); do
-    compose exec db mariadb-admin ping -h 127.0.0.1 -uroot -p"$DB_ROOT_PASSWORD" --silent >/dev/null 2>&1 && break
+    en db mariadb-admin ping -h 127.0.0.1 -uroot -p"$DB_ROOT_PASSWORD" --silent >/dev/null 2>&1 && break
     sleep 2
 done
-sql() { compose exec db mariadb -uroot -p"$DB_ROOT_PASSWORD" -N -e "$1"; }
+sql() { en db mariadb -uroot -p"$DB_ROOT_PASSWORD" -N -e "$1"; }
 for _ in $(seq 1 30); do
     [ "$(sql "SELECT COUNT(*) FROM information_schema.schemata WHERE schema_name IN ('sirvolab_viejo','sirvolab_nuevo')" 2>/dev/null | tr -d '\r')" = "2" ] && break
     sleep 2
@@ -59,17 +74,17 @@ done
 if [ "$(sql "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema='sirvolab_nuevo' AND table_name='usuario'" | tr -d '\r')" = "0" ]; then
     if [ -f datos/esquema.sql ]; then
         paso "Cargando el esquema real (datos/esquema.sql)"
-        compose exec -T db mariadb -uroot -p"$DB_ROOT_PASSWORD" sirvolab_nuevo < datos/esquema.sql
+        en db mariadb -uroot -p"$DB_ROOT_PASSWORD" sirvolab_nuevo < datos/esquema.sql
     else
         paso "Creando el esquema inferido del código (no hay datos/esquema.sql)"
-        compose exec nuevo php artisan migrate --path=tests/database/migrations --force
+        en nuevo php artisan migrate --path=tests/database/migrations --force
     fi
 
     paso "Generando datos inventados"
-    compose exec nuevo php artisan db:seed --class=DatosDePruebaSeeder --force
+    en nuevo php artisan db:seed --class=DatosDePruebaSeeder --force
 
     paso "Copiando los mismos datos a la base del sistema original"
-    compose exec db sh -c 'mariadb-dump -uroot -p"$MARIADB_ROOT_PASSWORD" sirvolab_nuevo | mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" sirvolab_viejo'
+    en db sh -c 'mariadb-dump -uroot -p"$MARIADB_ROOT_PASSWORD" sirvolab_nuevo | mariadb -uroot -p"$MARIADB_ROOT_PASSWORD" sirvolab_viejo'
     # Cada sistema arma los enlaces de sus correos con su propia dirección.
     sql "UPDATE sirvolab_viejo.ambiente SET nombre='${URL_VIEJO%/}/' WHERE id=1"
     sql "UPDATE sirvolab_nuevo.ambiente SET nombre='${URL_NUEVO%/}/' WHERE id=1"
