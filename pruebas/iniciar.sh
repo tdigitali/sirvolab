@@ -107,11 +107,15 @@ fi
 
 cat <<EOF
 
-Listo. Desde su computadora abra un túnel SSH al servidor:
+Listo.
+
+En una computadora con Windows (WSL), abra estas direcciones directo en el
+navegador. En el servidor de pruebas, primero abra un túnel SSH desde su
+computadora:
 
     ssh -L 8080:localhost:8080 -L 8081:localhost:8081 -L 8025:localhost:8025 usuario@servidor
 
-y entre a:
+Direcciones:
     Sistema original (PHP 5.6):  ${URL_VIEJO}
     Sistema migrado  (PHP 8.3):  ${URL_NUEVO}
     Correos (Mailpit):           http://localhost:8025

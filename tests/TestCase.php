@@ -60,6 +60,25 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * Candado: las pruebas reinician la base de datos antes de correr. Nunca
+     * deben hacerlo sobre otra cosa que SQLite en memoria (por ejemplo, si
+     * alguien corre las pruebas en un servidor o contenedor con
+     * DB_CONNECTION=mysql en sus variables de entorno).
+     */
+    protected function beforeRefreshingDatabase(): void
+    {
+        $conexion = config('database.default');
+        $base = config("database.connections.$conexion.database");
+
+        if ($conexion !== 'sqlite' || $base !== ':memory:') {
+            throw new \RuntimeException(
+                "Pruebas detenidas: usarían la base '$base' (conexión '$conexion'). "
+                .'Solo se permiten con SQLite en memoria para no borrar datos reales.'
+            );
+        }
+    }
+
+    /**
      * Usa el esquema inferido de tests/database/migrations (el proyecto no
      * trae migraciones de sus tablas reales).
      */

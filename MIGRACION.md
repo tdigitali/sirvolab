@@ -140,7 +140,11 @@ git diff HEAD~1 HEAD -M -- app resources routes
 
 ## Pruebas automatizadas
 
-`php artisan test` (80 pruebas, ~6 s):
+`php artisan test` (83 pruebas, ~6 s). Las pruebas **siempre** usan SQLite en
+memoria: `phpunit.xml` fuerza esos valores aunque el sistema tenga otras
+variables de entorno, y `tests/TestCase.php` se niega a reiniciar cualquier
+otra base. Sin esto, correr las pruebas en un contenedor o servidor con
+`DB_CONNECTION=mysql` en el entorno borraba las tablas de esa base.
 
 - `RecorridoDePantallasTest`: todas las pantallas GET con los 4 roles, en
   las 5 fases de la convocatoria, en escritorio y móvil, sin errores 500.
