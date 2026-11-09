@@ -13,7 +13,8 @@ for opcion in "$@"; do
     esac
 done
 cd "$(dirname "$0")"
-REPO="$(git rev-parse --show-toplevel)"
+# pruebas/ está en la raíz del proyecto (funciona con o sin git, p. ej. desde un .zip).
+REPO="$(cd .. && pwd)"
 # Commit con el código original (Laravel 4.2), para comparar contra el migrado.
 COMMIT_LEGADO=a9826c7
 
@@ -35,8 +36,13 @@ if [ ! -f .env ]; then
 fi
 set -a; . ./.env; set +a
 
-# 2. Código original extraído del historial de git.
+# 2. Código original: viene en el paquete .zip o se extrae del historial de git.
 if [ ! -d viejo/codigo ]; then
+    if ! git -C "$REPO" cat-file -e "$COMMIT_LEGADO" 2>/dev/null; then
+        echo "Falta pruebas/viejo/codigo y no hay historial de git para extraerlo." >&2
+        echo "Use el paquete .zip completo o clone el repositorio con git." >&2
+        exit 1
+    fi
     paso "Extrayendo el código original (commit $COMMIT_LEGADO)"
     mkdir -p viejo/codigo
     git -C "$REPO" archive "$COMMIT_LEGADO" | tar -x -C viejo/codigo
