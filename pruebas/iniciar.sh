@@ -64,6 +64,15 @@ fi
 paso "Levantando contenedores"
 : > .iniciar.log
 compose up -d
+# podman-compose puede reportar éxito aunque falle algún contenedor.
+for servicio in db mailpit renapo nuevo viejo; do
+    if [ -z "$(contenedor "$servicio")" ]; then
+        echo "El contenedor '$servicio' no quedó corriendo. Últimas líneas de pruebas/.iniciar.log:" >&2
+        grep -iE "error|exit code: [1-9]" .iniciar.log | tail -15 >&2
+        echo "Si son contenedores de un intento anterior, ejecute 'podman-compose down' y vuelva a intentar." >&2
+        exit 1
+    fi
+done
 
 paso "Esperando a MariaDB"
 for _ in $(seq 1 60); do
